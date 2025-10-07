@@ -293,18 +293,22 @@
             </div>
 
             <div class="result-card gradcam-section" id="gradcamSection">
-                <div class="gradcam-title">Grad-CAM Visualization</div>
-                <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">Highlighting regions that influenced the AI's decision</p>
+                <div class="gradcam-title">🔍 Grad-CAM Visualization - Tumor Location</div>
+                <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">Red/yellow areas show where the AI detected the tumor</p>
                 <img id="gradcamImage" class="gradcam-image" alt="Grad-CAM Heatmap">
             </div>
         </div>
 
         <div class="info-box">
-            <h3>ℹ️ About Grad-CAM</h3>
+            <h3>ℹ️ About Grad-CAM Visualization</h3>
             <p>
-                Grad-CAM (Gradient-weighted Class Activation Mapping) highlights the regions 
-                of the MRI image that the AI model focused on to make its prediction. 
-                Red/yellow areas indicate regions of high importance for the detection.
+                <strong>Grad-CAM</strong> (Gradient-weighted Class Activation Mapping) highlights the regions 
+                of the MRI image where the AI detected potential tumor tissue. 
+                <strong style="color: #f5576c;">Red/yellow areas</strong> indicate regions of highest concern.
+            </p>
+            <p style="margin-top: 10px; font-style: italic; color: #888;">
+                Note: Grad-CAM visualization is only shown when a tumor is detected. 
+                For "No Tumor" results, no heatmap is generated.
             </p>
         </div>
     </div>
@@ -429,9 +433,9 @@
                 allProbabilitiesDiv.style.display = 'none';
             }
 
-            // Set Grad-CAM image
+            // Set Grad-CAM image - Only show if tumor detected
             const gradcamSection = document.getElementById('gradcamSection');
-            if (data.gradcam_image && data.gradcam_available) {
+            if (isTumor && data.gradcam_image && data.gradcam_available) {
                 gradcamImage.src = `data:image/png;base64,${data.gradcam_image}`;
                 gradcamImage.style.display = 'block';
                 gradcamSection.style.display = 'block';
@@ -447,7 +451,11 @@
                 };
             } else {
                 gradcamSection.style.display = 'none';
-                console.warn('Grad-CAM not available');
+                if (!isTumor) {
+                    console.log('No tumor detected - Grad-CAM not applicable');
+                } else {
+                    console.warn('Grad-CAM not available');
+                }
             }
 
             // Show results

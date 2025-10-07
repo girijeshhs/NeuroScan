@@ -272,37 +272,39 @@ def predict():
         is_tumor = "No Tumor" not in prediction_label
         tumor_type = prediction_label if is_tumor else "None"
         
-        # Generate Grad-CAM - AGGRESSIVE VERSION
+        # Generate Grad-CAM - ONLY if tumor is detected
         gradcam_base64 = None
-        print("\n" + "="*50)
-        print("🔥 STARTING GRAD-CAM GENERATION")
-        print("="*50)
-        try:
-            last_conv_layer_name = get_last_conv_layer_name(model)
-            print(f"✓ Using last conv layer: {last_conv_layer_name}")
-            
-            print(f"✓ Generating heatmap for class {predicted_class}...")
-            heatmap = make_gradcam_heatmap(img_array, model, last_conv_layer_name, predicted_class)
-            
-            print(f"✓ Creating overlay with original image...")
-            gradcam_image = create_gradcam_overlay(original_image, heatmap)
-            
-            print(f"✓ Converting to base64...")
-            gradcam_base64 = image_to_base64(gradcam_image)
-            
-            print("✅ Grad-CAM generated successfully!")
+        
+        if not is_tumor:
+            print("\n" + "="*50)
+            print("ℹ️  No tumor detected - Skipping Grad-CAM generation")
             print("="*50 + "\n")
-        except Exception as e:
-            print(f"❌ Grad-CAM generation error: {e}")
-            import traceback
-            traceback.print_exc()
-            print("="*50 + "\n")
-            # If Grad-CAM fails, return the original image
+        else:
+            print("\n" + "="*50)
+            print("🔥 STARTING GRAD-CAM GENERATION")
+            print("="*50)
             try:
-                img_array_uint8 = np.array(original_image)
-                gradcam_base64 = image_to_base64(img_array_uint8)
-            except:
-                pass
+                last_conv_layer_name = get_last_conv_layer_name(model)
+                print(f"✓ Using last conv layer: {last_conv_layer_name}")
+                
+                print(f"✓ Generating heatmap for class {predicted_class}...")
+                heatmap = make_gradcam_heatmap(img_array, model, last_conv_layer_name, predicted_class)
+                
+                print(f"✓ Creating overlay with original image...")
+                gradcam_image = create_gradcam_overlay(original_image, heatmap)
+                
+                print(f"✓ Converting to base64...")
+                gradcam_base64 = image_to_base64(gradcam_image)
+                
+                print("✅ Grad-CAM generated successfully!")
+                print("="*50 + "\n")
+            except Exception as e:
+                print(f"❌ Grad-CAM generation error: {e}")
+                import traceback
+                traceback.print_exc()
+                print("="*50 + "\n")
+                # If Grad-CAM fails, don't send any image
+                gradcam_base64 = None
         
         # Prepare response
         response = {
