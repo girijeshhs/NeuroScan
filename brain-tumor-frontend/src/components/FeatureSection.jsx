@@ -46,24 +46,24 @@ const features = [
 
 const FeatureSection = () => {
   return (
-    <section className="relative py-12 md:py-16 z-10">
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative py-8 md:py-10 z-10">
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-2xl mx-auto"
+          transition={{ duration: 0.4 }}
+          className="text-center max-w-2xl mx-auto mb-8"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
             Engineered for Clinical Workflows
           </h2>
-          <p className="mt-4 text-base md:text-lg text-gray-600 dark:text-gray-300">
+          <p className="mt-2 text-sm md:text-base text-gray-600 dark:text-gray-300">
             Seamlessly integrate AI-assisted diagnostics with intuitive visualization and fast inference.
           </p>
         </motion.div>
 
-  <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((feature, index) => {
             const Icon = featureIcons[feature.key]
             return (
@@ -74,13 +74,13 @@ const FeatureSection = () => {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.3 }}
-                className="group relative overflow-hidden rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/80 shadow-md hover:shadow-lg transition-shadow duration-300"
+                className="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/80 shadow-md hover:shadow-lg transition-shadow duration-300"
               >
-                <div className="relative p-8 space-y-4">
-                  <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                    <Icon className="w-7 h-7" />
+                <div className="relative p-6 space-y-3">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                    <Icon className="w-6 h-6" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                     {feature.title}
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">

@@ -116,82 +116,82 @@ function App() {
       case 'analyze':
         return (
           <>
-            <FeatureSection />
-            <section ref={uploadSectionRef} className="relative py-12 md:py-16 z-10">
-          <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.4 }}
-              className="rounded-[28px] border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950/90 shadow-xl"
-            >
-              <div className="px-6 sm:px-9 pt-8 pb-6">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
-                  <div>
-                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
-                      Upload MRI Scan
-                    </h2>
-                    <p className="mt-2 text-sm md:text-base text-gray-600 dark:text-gray-300">
-                      Drag and drop an axial MRI slice. We preprocess, classify, and generate a Grad-CAM heatmap to highlight
-                      potential tumor regions.
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3 rounded-full bg-blue-500/10 px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-300">
-                    <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                    Flask API · TensorFlow 2 · VGG16 backbone
-                  </div>
-                </div>
-
-                <UploadBox
-                  onFileSelect={handleFileSelect}
-                  selectedFile={selectedFile}
-                  previewUrl={previewUrl}
-                  loading={loading}
-                />
-
-                <motion.button
-                  whileHover={{ scale: selectedFile && !loading ? 1.02 : 1 }}
-                  whileTap={{ scale: selectedFile && !loading ? 0.98 : 1 }}
-                  onClick={handlePredict}
-                  disabled={!selectedFile || loading}
-                  className={`
-                    w-full mt-8 py-4 rounded-full text-lg font-semibold transition-all duration-300
-                    ${selectedFile && !loading
-                      ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-xl shadow-blue-500/30 hover:shadow-2xl hover:shadow-blue-500/40'
-                      : 'bg-white/55 dark:bg-gray-900/55 text-gray-400 cursor-not-allowed border border-white/60 dark:border-gray-800'}
-                  `}
-                >
-                  {loading ? (
-                    <span className="flex items-center justify-center gap-3">
-                      <LoadingSpinner />
-                      Running inference...
-                    </span>
-                  ) : (
-                    'Analyze MRI'
-                  )}
-                </motion.button>
-              </div>
-            </motion.div>
-
-            <AnimatePresence>
-              {result && (
+            {/* Upload Section First */}
+            <section ref={uploadSectionRef} className="relative pt-24 pb-8 z-10">
+              <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <motion.div
-                  key="result-card"
-                  initial={{ opacity: 0, y: 40 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 40 }}
-                  transition={{ duration: 0.5 }}
-                  className="mt-12"
+                  transition={{ duration: 0.4 }}
+                  className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950/90 shadow-xl overflow-hidden"
                 >
-                  <ResultCard result={result} previewUrl={previewUrl} onReset={handleReset} />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </section>
+                  <div className="px-6 sm:px-8 pt-8 pb-6">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                      <div>
+                        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                          Upload MRI Scan
+                        </h2>
+                        <p className="mt-1.5 text-sm text-gray-600 dark:text-gray-300">
+                          Drag and drop an axial MRI slice. We preprocess, classify, and generate a Grad-CAM heatmap.
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 rounded-full bg-blue-500/10 px-3.5 py-1.5 text-xs font-medium text-blue-600 dark:text-blue-300 whitespace-nowrap">
+                        <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                        Flask API · VGG16
+                      </div>
+                    </div>
 
-        <WhyItMatters />
+                    <UploadBox
+                      onFileSelect={handleFileSelect}
+                      selectedFile={selectedFile}
+                      previewUrl={previewUrl}
+                      loading={loading}
+                    />
+
+                    <motion.button
+                      whileHover={{ scale: selectedFile && !loading ? 1.02 : 1 }}
+                      whileTap={{ scale: selectedFile && !loading ? 0.98 : 1 }}
+                      onClick={handlePredict}
+                      disabled={!selectedFile || loading}
+                      className={`
+                        w-full mt-6 py-3.5 rounded-full text-base font-semibold transition-all duration-300
+                        ${selectedFile && !loading
+                          ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40'
+                          : 'bg-white/55 dark:bg-gray-900/55 text-gray-400 cursor-not-allowed border border-white/60 dark:border-gray-800'}
+                      `}
+                    >
+                      {loading ? (
+                        <span className="flex items-center justify-center gap-3">
+                          <LoadingSpinner />
+                          Running inference...
+                        </span>
+                      ) : (
+                        'Analyze MRI'
+                      )}
+                    </motion.button>
+                  </div>
+                </motion.div>
+
+                <AnimatePresence>
+                  {result && (
+                    <motion.div
+                      key="result-card"
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 30 }}
+                      transition={{ duration: 0.4 }}
+                      className="mt-8"
+                    >
+                      <ResultCard result={result} previewUrl={previewUrl} onReset={handleReset} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </section>
+
+            {/* Features Section Below Upload */}
+            <FeatureSection />
+            <WhyItMatters />
           </>
         )
       default:
