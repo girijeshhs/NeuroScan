@@ -46,26 +46,43 @@ const features = [
 
 const FeatureSection = () => {
   return (
-    <section className="relative py-16 md:py-20 z-10 bg-gray-50/50 dark:bg-gray-900/30">
+    <section className="relative py-20 md:py-28 z-10">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-50/30 to-indigo-50/30 dark:via-blue-950/10 dark:to-indigo-950/10" />
+      
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
-          className="text-center max-w-3xl mx-auto mb-12"
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-3xl mx-auto mb-16"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="inline-block mb-4 px-4 py-2 bg-blue-500/10 rounded-full text-sm font-semibold text-blue-600 dark:text-blue-400"
+          >
+            ✨ Powered by AI
+          </motion.div>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 dark:from-white dark:via-blue-100 dark:to-indigo-100 bg-clip-text text-transparent mb-6">
             Engineered for Clinical Workflows
           </h2>
-          <p className="mt-4 text-base md:text-lg lg:text-xl text-gray-600 dark:text-gray-300">
-            Seamlessly integrate AI-assisted diagnostics with intuitive visualization and fast inference.
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
+            Seamlessly integrate AI-assisted diagnostics with intuitive visualization and lightning-fast inference.
           </p>
         </motion.div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((feature, index) => {
             const Icon = featureIcons[feature.key]
+            const colors = {
+              AI: 'from-blue-500 to-cyan-500',
+              GradCAM: 'from-purple-500 to-pink-500',
+              Accuracy: 'from-emerald-500 to-teal-500',
+              Instant: 'from-amber-500 to-orange-500',
+            }
             return (
               <motion.div
                 key={feature.title}
@@ -73,17 +90,26 @@ const FeatureSection = () => {
                 variants={cardVariants}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, amount: 0.3 }}
-                className="group relative overflow-hidden rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/80 shadow-lg hover:shadow-xl transition-all duration-300"
+                viewport={{ once: true, amount: 0.2 }}
+                whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                className="group relative overflow-hidden rounded-3xl bg-white dark:bg-gray-900 shadow-xl hover:shadow-2xl transition-all duration-300"
               >
-                <div className="relative p-8 space-y-4">
-                  <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 text-blue-600 dark:text-blue-400">
+                {/* Gradient border effect */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${colors[feature.key]} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+                <div className="absolute inset-[1px] rounded-3xl bg-white dark:bg-gray-900" />
+                
+                <div className="relative p-8 space-y-5">
+                  <motion.div
+                    whileHover={{ rotate: 360, scale: 1.1 }}
+                    transition={{ duration: 0.6 }}
+                    className={`flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${colors[feature.key]} text-white shadow-lg`}
+                  >
                     <Icon className="w-8 h-8" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  </motion.div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                     {feature.title}
                   </h3>
-                  <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
+                  <p className="text-base text-gray-600 dark:text-gray-300 leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
@@ -91,22 +117,6 @@ const FeatureSection = () => {
             )
           })}
         </div>
-
-        {/* Additional Info Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3, duration: 0.4 }}
-          className="mt-16 bg-gradient-to-br from-blue-500/10 via-indigo-500/10 to-purple-500/10 rounded-3xl p-8 md:p-12 border border-blue-200 dark:border-blue-800/30"
-        >
-          <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
-            Why Early Detection Matters
-          </h3>
-          <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-            Brain tumors can progress rapidly, and subtle abnormalities are often difficult to detect in early stages. By combining deep learning diagnostics with explainable Grad-CAM visualization, clinicians receive actionable insights in seconds. This assists in triaging urgent cases, validating treatment plans, and improving patient outcomes through timely intervention.
-          </p>
-        </motion.div>
       </div>
     </section>
   )
