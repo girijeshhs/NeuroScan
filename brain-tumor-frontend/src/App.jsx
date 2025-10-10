@@ -1,13 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Moon, Sun, Brain } from 'lucide-react'
+import axios from 'axios'
+
+import HeroSection from './components/HeroSection'
+import FeatureSection from './components/FeatureSection'
+import WhyItMatters from './components/WhyItMatters'
+import SiteFooter from './components/SiteFooter'
 import UploadBox from './components/UploadBox'
 import ResultCard from './components/ResultCard'
 import LoadingSpinner from './components/LoadingSpinner'
 import ErrorToast from './components/ErrorToast'
-import axios from 'axios'
 
 const API_URL = 'http://127.0.0.1:5000/predict'
+const heroPhrases = [
+  'AI-assisted triage support for radiologists',
+  'Instant Grad-CAM visualization for every MRI',
+  'Clinician-friendly interface for rapid decisions',
+]
 
 function App() {
   const [darkMode, setDarkMode] = useState(false)
@@ -16,6 +25,10 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
+  const [phraseIndex, setPhraseIndex] = useState(0)
+  const [charIndex, setCharIndex] = useState(0)
+
+  const uploadSectionRef = useRef(null)
 
   useEffect(() => {
     if (darkMode) {
@@ -25,12 +38,35 @@ function App() {
     }
   }, [darkMode])
 
+  useEffect(() => {
+    const currentPhrase = heroPhrases[phraseIndex]
+    if (charIndex < currentPhrase.length) {
+      const timeout = setTimeout(() => setCharIndex((prev) => prev + 1), 55)
+      return () => clearTimeout(timeout)
+    } else {
+      const timeout = setTimeout(() => {
+        setCharIndex(0)
+        setPhraseIndex((prev) => (prev + 1) % heroPhrases.length)
+      }, 1700)
+      return () => clearTimeout(timeout)
+    }
+  }, [charIndex, phraseIndex])
+
+  const displayedPhrase = heroPhrases[phraseIndex].slice(0, charIndex)
+
   const handleFileSelect = (file) => {
+    if (!file) {
+      setSelectedFile(null)
+      setPreviewUrl(null)
+      setResult(null)
+      setError(null)
+      return
+    }
+
     setSelectedFile(file)
     setResult(null)
     setError(null)
-    
-    // Create preview URL
+
     const reader = new FileReader()
     reader.onloadend = () => {
       setPreviewUrl(reader.result)
@@ -61,8 +97,8 @@ function App() {
     } catch (err) {
       console.error('Prediction error:', err)
       setError(
-        err.response?.data?.error || 
-        'Failed to connect to the server. Make sure Flask backend is running at http://127.0.0.1:5000'
+        err.response?.data?.error ||
+          'Failed to connect to the server. Make sure the Flask backend is running at http://127.0.0.1:5000'
       )
     } finally {
       setLoading(false)
@@ -76,110 +112,105 @@ function App() {
     setError(null)
   }
 
+  const scrollToUpload = () => {
+    uploadSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
-    <div className="min-h-screen flex flex-col py-8 px-4 sm:px-6 lg:px-8">
-      {/* Header */}
-      <motion.header 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-5xl w-full mx-auto mb-8"
-      >
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-xl shadow-lg">
-              <Brain className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
-                Brain Tumor Detection
-              </h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400">AI-Powered Medical Diagnosis</p>
-            </div>
-          </div>
-          
-          {/* Dark Mode Toggle */}
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className="p-3 rounded-xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-            aria-label="Toggle dark mode"
-          >
-            {darkMode ? (
-              <Sun className="w-5 h-5 text-yellow-500" />
-            ) : (
-              <Moon className="w-5 h-5 text-indigo-600" />
-            )}
-          </button>
-        </div>
-      </motion.header>
+    <div className="relative min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 dark:from-gray-950 dark:via-gray-940 dark:to-gray-900 text-gray-900 dark:text-gray-100">
+      <div className="pointer-events-none fixed inset-0 opacity-30 z-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-100/40 to-transparent dark:from-blue-900/20" />
+      </div>
 
-      {/* Main Content */}
-      <main className="flex-1 max-w-5xl w-full mx-auto">
-        <AnimatePresence mode="wait">
-          {!result ? (
+      <div className="relative">
+        <HeroSection
+          darkMode={darkMode}
+          onToggleTheme={() => setDarkMode((prev) => !prev)}
+          onGetStarted={scrollToUpload}
+          typewriterText={displayedPhrase}
+        />
+
+        <FeatureSection />
+
+        <section ref={uploadSectionRef} className="relative py-12 md:py-16 z-10">
+          <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
-              key="upload"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.3 }}
-              className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 md:p-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.4 }}
+              className="rounded-[28px] border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950/90 shadow-xl"
             >
-              <UploadBox
-                onFileSelect={handleFileSelect}
-                selectedFile={selectedFile}
-                previewUrl={previewUrl}
-              />
+              <div className="px-6 sm:px-9 pt-8 pb-6">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
+                  <div>
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                      Upload MRI Scan
+                    </h2>
+                    <p className="mt-2 text-sm md:text-base text-gray-600 dark:text-gray-300">
+                      Drag and drop an axial MRI slice. We preprocess, classify, and generate a Grad-CAM heatmap to highlight
+                      potential tumor regions.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3 rounded-full bg-blue-500/10 px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-300">
+                    <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                    Flask API · TensorFlow 2 · VGG16 backbone
+                  </div>
+                </div>
 
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handlePredict}
-                disabled={!selectedFile || loading}
-                className={`
-                  w-full mt-8 py-4 rounded-xl font-semibold text-lg
-                  transition-all duration-300 shadow-lg
-                  ${selectedFile && !loading
-                    ? 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white hover:shadow-xl'
-                    : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'
-                  }
-                `}
-              >
-                {loading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <LoadingSpinner />
-                    Analyzing...
-                  </span>
-                ) : (
-                  'Analyze MRI Scan'
-                )}
-              </motion.button>
+                <UploadBox
+                  onFileSelect={handleFileSelect}
+                  selectedFile={selectedFile}
+                  previewUrl={previewUrl}
+                  loading={loading}
+                />
+
+                <motion.button
+                  whileHover={{ scale: selectedFile && !loading ? 1.02 : 1 }}
+                  whileTap={{ scale: selectedFile && !loading ? 0.98 : 1 }}
+                  onClick={handlePredict}
+                  disabled={!selectedFile || loading}
+                  className={`
+                    w-full mt-8 py-4 rounded-full text-lg font-semibold transition-all duration-300
+                    ${selectedFile && !loading
+                      ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-xl shadow-blue-500/30 hover:shadow-2xl hover:shadow-blue-500/40'
+                      : 'bg-white/55 dark:bg-gray-900/55 text-gray-400 cursor-not-allowed border border-white/60 dark:border-gray-800'}
+                  `}
+                >
+                  {loading ? (
+                    <span className="flex items-center justify-center gap-3">
+                      <LoadingSpinner />
+                      Running inference...
+                    </span>
+                  ) : (
+                    'Analyze MRI'
+                  )}
+                </motion.button>
+              </div>
             </motion.div>
-          ) : (
-            <ResultCard
-              result={result}
-              previewUrl={previewUrl}
-              onReset={handleReset}
-            />
-          )}
-        </AnimatePresence>
-      </main>
 
-      {/* Footer */}
-      <motion.footer 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="max-w-5xl w-full mx-auto mt-12 text-center"
-      >
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Developed with ❤️ by <span className="font-semibold text-blue-600 dark:text-blue-400">Girijesh S</span>
-        </p>
-        <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
-          © 2025 Brain Tumor Detection System. For educational purposes only.
-        </p>
-      </motion.footer>
+            <AnimatePresence>
+              {result && (
+                <motion.div
+                  key="result-card"
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 40 }}
+                  transition={{ duration: 0.5 }}
+                  className="mt-12"
+                >
+                  <ResultCard result={result} previewUrl={previewUrl} onReset={handleReset} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </section>
 
-      {/* Error Toast */}
+        <WhyItMatters />
+
+        <SiteFooter />
+      </div>
+
       <ErrorToast error={error} onClose={() => setError(null)} />
     </div>
   )
