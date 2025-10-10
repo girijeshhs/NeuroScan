@@ -66,10 +66,10 @@ const ModelPage = () => {
               Technical Specifications
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-gray-900 dark:text-white mb-4">
             VGG16 Deep Learning Model
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto font-normal leading-relaxed">
             Fine-tuned convolutional neural network architecture optimized for medical imaging classification
             with explainable AI via Grad-CAM visualization.
           </p>
@@ -90,10 +90,10 @@ const ModelPage = () => {
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 mb-2">
                   <Icon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                 </div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                <p className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">
                   {metric.value}
                 </p>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                <p className="text-xs text-gray-600 dark:text-gray-400 font-medium tracking-wide uppercase">
                   {metric.label}
                 </p>
               </motion.div>

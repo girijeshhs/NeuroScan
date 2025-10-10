@@ -7,6 +7,10 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Roboto', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['Roboto Mono', 'monospace'],
+      },
       colors: {
         medical: {
           blue: '#4A90E2',
@@ -16,6 +20,10 @@ export default {
       },
       animation: {
         'spin-slow': 'spin 3s linear infinite',
+      },
+      letterSpacing: {
+        tighter: '-0.02em',
+        tight: '-0.01em',
       },
     },
   },

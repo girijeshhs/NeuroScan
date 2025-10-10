@@ -3,14 +3,34 @@
 @tailwind utilities;
 
 @layer base {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
   html {
     scroll-behavior: auto;
   }
+  
   body {
-    @apply bg-gradient-to-br from-blue-50 via-gray-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900;
+    @apply bg-white;
     @apply min-h-screen font-sans antialiased;
     -webkit-overflow-scrolling: touch;
-    will-change: scroll-position;
+    font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+    letter-spacing: -0.02em;
+  }
+  
+  p {
+    @apply tracking-normal;
+  }
+  
+  button {
+    @apply font-medium;
   }
 }
 

@@ -17,7 +17,7 @@ import ErrorToast from './components/ErrorToast'
 const API_URL = 'http://127.0.0.1:5000/predict'
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false)
+  const [darkMode] = useState(false) // Force light mode only
   const [activeSection, setActiveSection] = useState('home')
   const [selectedFile, setSelectedFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState(null)
@@ -28,12 +28,10 @@ function App() {
   const uploadSectionRef = useRef(null)
 
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [darkMode])
+    // Force remove dark mode class
+    document.documentElement.classList.remove('dark')
+    document.body.classList.remove('dark')
+  }, [])
 
   const handleFileSelect = (file) => {
     if (!file) {
@@ -117,29 +115,29 @@ function App() {
         return (
           <>
             {/* Side-by-Side Upload and Results Layout */}
-            <section ref={uploadSectionRef} className="relative pt-20 pb-8 z-10 min-h-screen">
-              <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+            <section ref={uploadSectionRef} className="relative pt-16 pb-8 z-10 min-h-screen bg-gradient-to-b from-blue-50/30 to-white">
+              <div className="relative max-w-6xl mx-auto px-6 sm:px-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
                   {/* Left Side - Upload Section */}
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="sticky top-20"
+                    transition={{ duration: 0.3 }}
+                    className="sticky top-16"
                   >
-                    <div className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950/90 shadow-xl overflow-hidden">
-                      <div className="px-6 sm:px-8 pt-8 pb-6">
-                        <div className="flex flex-col gap-4 mb-6">
+                    <div className="rounded-2xl border-2 border-gray-200 bg-white shadow-lg overflow-hidden">
+                      <div className="px-6 pt-6 pb-5">
+                        <div className="flex flex-col gap-3 mb-5">
                           <div>
-                            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900">
                               Upload MRI Scan
                             </h2>
-                            <p className="mt-1.5 text-sm text-gray-600 dark:text-gray-300">
+                            <p className="mt-1 text-sm text-gray-600 font-normal leading-relaxed">
                               Drag and drop an axial MRI slice. We preprocess, classify, and generate a Grad-CAM heatmap.
                             </p>
                           </div>
-                          <div className="flex items-center gap-2 rounded-full bg-blue-500/10 px-3.5 py-1.5 text-xs font-medium text-blue-600 dark:text-blue-300 w-fit">
-                            <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                          <div className="flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 text-xs font-bold text-indigo-700 w-fit tracking-wide uppercase">
+                            <span className="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                             Flask API · VGG16
                           </div>
                         </div>
@@ -157,10 +155,10 @@ function App() {
                           onClick={handlePredict}
                           disabled={!selectedFile || loading}
                           className={`
-                            w-full mt-6 py-3.5 rounded-full text-base font-semibold transition-all duration-300
+                            w-full mt-5 py-3 rounded-lg text-sm font-semibold tracking-normal transition-all duration-300
                             ${selectedFile && !loading
-                              ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40'
-                              : 'bg-white/55 dark:bg-gray-900/55 text-gray-400 cursor-not-allowed border border-white/60 dark:border-gray-800'}
+                              ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md hover:shadow-lg'
+                              : 'bg-gray-100 text-gray-400 cursor-not-allowed border-2 border-gray-200'}
                           `}
                         >
                           {loading ? (
@@ -180,16 +178,16 @@ function App() {
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4 }}
+                    transition={{ duration: 0.3 }}
                   >
                     <AnimatePresence mode="wait">
                       {result ? (
                         <motion.div
                           key="result-card"
-                          initial={{ opacity: 0, scale: 0.95 }}
+                          initial={{ opacity: 0, scale: 0.96 }}
                           animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.95 }}
-                          transition={{ duration: 0.4 }}
+                          exit={{ opacity: 0, scale: 0.96 }}
+                          transition={{ duration: 0.3 }}
                         >
                           <ResultCard result={result} previewUrl={previewUrl} onReset={handleReset} />
                         </motion.div>
@@ -199,16 +197,16 @@ function App() {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
-                          className="rounded-3xl border-2 border-dashed border-gray-300 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/30 h-full min-h-[400px] flex items-center justify-center"
+                          className="rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 h-full min-h-[350px] flex items-center justify-center"
                         >
                           <div className="text-center px-6">
-                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-500/10 flex items-center justify-center">
-                              <Activity className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                            <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-indigo-100 flex items-center justify-center">
+                              <Activity className="w-7 h-7 text-indigo-600" />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                            <h3 className="text-base font-bold tracking-tight text-gray-900 mb-2">
                               Results will appear here
                             </h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                            <p className="text-sm text-gray-600 font-normal leading-relaxed max-w-xs mx-auto">
                               Upload an MRI scan and click "Analyze MRI" to see the prediction results and Grad-CAM visualization.
                             </p>
                           </div>
@@ -230,9 +228,13 @@ function App() {
   }
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 dark:from-gray-950 dark:via-gray-940 dark:to-gray-900 text-gray-900 dark:text-gray-100">
-      <div className="pointer-events-none fixed inset-0 opacity-30 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-100/40 to-transparent dark:from-blue-900/20" />
+    <div className="relative min-h-screen bg-white text-gray-900" style={{ backgroundColor: '#ffffff' }}>
+      {/* Subtle background pattern */}
+      <div className="pointer-events-none fixed inset-0 opacity-[0.03] z-0">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 2px 2px, rgb(99, 102, 241) 1px, transparent 0)`,
+          backgroundSize: '40px 40px'
+        }} />
       </div>
 
       <Navbar

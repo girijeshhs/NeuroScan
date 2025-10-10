@@ -82,10 +82,10 @@ const TumorsPage = () => {
               Medical Reference Guide
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-gray-900 dark:text-white mb-4">
             Brain Tumor Types
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto font-normal leading-relaxed">
             Our AI model detects and classifies three primary types of brain tumors with high accuracy.
             Understanding each type helps in diagnosis and treatment planning.
           </p>
@@ -108,19 +108,19 @@ const TumorsPage = () => {
                     <Icon className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className={`text-2xl font-bold ${colors.text} mb-2`}>
+                    <h3 className={`text-2xl font-bold tracking-tight ${colors.text} mb-2`}>
                       {tumor.name}
                     </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 font-normal leading-relaxed">
                       {tumor.description}
                     </p>
                   </div>
                 </div>
 
-                <div className="space-y-4 mt-6">
+                <div className="space-y-4">
                   <div>
-                    <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                      Key Characteristics:
+                    <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 tracking-wide uppercase">
+                      Characteristics:
                     </h4>
                     <ul className="space-y-1.5">
                       {tumor.characteristics.map((char, i) => (

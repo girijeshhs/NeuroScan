@@ -27,21 +27,21 @@ const Navbar = ({ darkMode, onToggleTheme, onNavigate, activeSection }) => {
       animate={{ y: 0 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/95 dark:bg-gray-950/95 shadow-lg backdrop-blur-sm'
-          : 'bg-transparent'
+          ? 'bg-white/98 shadow-md border-b border-gray-200'
+          : 'bg-white/80 backdrop-blur-sm'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8">
+        <div className="flex items-center justify-between h-14">
           {/* Logo */}
           <button
             onClick={() => onNavigate('home')}
             className="flex items-center gap-2 group"
           >
-            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-2 rounded-lg shadow-md group-hover:shadow-lg transition-shadow">
-              <Brain className="w-6 h-6 text-white" />
+            <div className="bg-gradient-to-br from-indigo-600 to-blue-600 p-1.5 rounded-lg shadow-sm group-hover:shadow-md transition-shadow">
+              <Brain className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent hidden sm:block">
+            <span className="text-lg font-black tracking-tight bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent hidden sm:block">
               NeuroScan AI
             </span>
           </button>
@@ -55,21 +55,21 @@ const Navbar = ({ darkMode, onToggleTheme, onNavigate, activeSection }) => {
                 <button
                   key={item.id}
                   onClick={() => onNavigate(item.id)}
-                  className={`relative px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                  className={`relative px-3 py-1.5 rounded-lg font-semibold text-sm transition-all duration-200 ${
                     isActive
-                      ? 'text-blue-600 dark:text-blue-400'
-                      : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                      ? 'text-indigo-600'
+                      : 'text-gray-700 hover:text-indigo-600'
                   }`}
                 >
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-1.5">
                     <Icon className="w-4 h-4" />
                     {item.label}
                   </span>
                   {isActive && (
                     <motion.div
                       layoutId="activeNav"
-                      className="absolute inset-0 bg-blue-100 dark:bg-blue-900/30 rounded-lg -z-10"
-                      transition={{ type: 'spring', duration: 0.5 }}
+                      className="absolute inset-0 bg-indigo-50 rounded-lg -z-10"
+                      transition={{ type: 'spring', duration: 0.4 }}
                     />
                   )}
                 </button>
@@ -79,28 +79,16 @@ const Navbar = ({ darkMode, onToggleTheme, onNavigate, activeSection }) => {
 
           {/* Right side actions */}
           <div className="flex items-center gap-3">
-            <button
-              onClick={onToggleTheme}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-              aria-label="Toggle theme"
-            >
-              {darkMode ? (
-                <Sun className="w-5 h-5 text-yellow-500" />
-              ) : (
-                <Moon className="w-5 h-5 text-indigo-600" />
-              )}
-            </button>
-
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              className="md:hidden p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
               aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? (
-                <X className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                <X className="w-5 h-5 text-gray-700" />
               ) : (
-                <Menu className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                <Menu className="w-5 h-5 text-gray-700" />
               )}
             </button>
           </div>
