@@ -47,7 +47,7 @@ const features = [
 const FeatureSection = () => {
   return (
     <section className="relative py-12 z-10 bg-gradient-to-b from-blue-50/50 to-white">
-      <div className="relative max-w-6xl mx-auto px-6 sm:px-8">
+      <div className="relative max-w-[1400px] mx-auto px-8 sm:px-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

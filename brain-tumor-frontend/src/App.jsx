@@ -116,8 +116,8 @@ function App() {
           <>
             {/* Side-by-Side Upload and Results Layout */}
             <section ref={uploadSectionRef} className="relative pt-16 pb-8 z-10 min-h-screen bg-gradient-to-b from-blue-50/30 to-white">
-              <div className="relative max-w-6xl mx-auto px-6 sm:px-8">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+              <div className="relative max-w-[1400px] mx-auto px-8 sm:px-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                   {/* Left Side - Upload Section */}
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}

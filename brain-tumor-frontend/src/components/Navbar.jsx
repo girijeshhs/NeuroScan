@@ -31,7 +31,7 @@ const Navbar = ({ darkMode, onToggleTheme, onNavigate, activeSection }) => {
           : 'bg-white/80 backdrop-blur-sm'
       }`}
     >
-      <div className="max-w-6xl mx-auto px-6 sm:px-8">
+      <div className="max-w-[1400px] mx-auto px-8 sm:px-12">
         <div className="flex items-center justify-between h-14">
           {/* Logo */}
           <button

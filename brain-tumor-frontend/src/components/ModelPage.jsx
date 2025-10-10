@@ -52,8 +52,8 @@ const ModelPage = () => {
   ]
 
   return (
-    <section className="relative min-h-screen pt-24 pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative min-h-screen pt-20 pb-12 bg-white">
+      <div className="max-w-[1400px] mx-auto px-8 sm:px-12">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

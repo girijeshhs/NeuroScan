@@ -69,29 +69,29 @@ const TumorsPage = () => {
   }
 
   return (
-    <section className="relative min-h-screen pt-24 pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative min-h-screen pt-20 pb-12 bg-white">
+      <div className="max-w-[1400px] mx-auto px-8 sm:px-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-100 dark:bg-red-900/30 rounded-full mb-6">
-            <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400" />
-            <span className="text-sm font-medium text-red-700 dark:text-red-300">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-100 rounded-full mb-4">
+            <AlertCircle className="w-4 h-4 text-red-600" />
+            <span className="text-sm font-medium text-red-700">
               Medical Reference Guide
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-gray-900 dark:text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-gray-900 mb-4">
             Brain Tumor Types
           </h2>
-          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto font-normal leading-relaxed">
+          <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto font-normal leading-relaxed">
             Our AI model detects and classifies three primary types of brain tumors with high accuracy.
             Understanding each type helps in diagnosis and treatment planning.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tumorTypes.map((tumor, index) => {
             const Icon = tumor.icon
             const colors = colorClasses[tumor.color]
