@@ -2,7 +2,10 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import axios from 'axios'
 
-import HeroSection from './components/HeroSection'
+import Navbar from './components/Navbar.jsx'
+import HomePage from './components/HomePage.jsx'
+import TumorsPage from './components/TumorsPage.jsx'
+import ModelPage from './components/ModelPage.jsx'
 import FeatureSection from './components/FeatureSection'
 import WhyItMatters from './components/WhyItMatters'
 import SiteFooter from './components/SiteFooter'
@@ -12,21 +15,15 @@ import LoadingSpinner from './components/LoadingSpinner'
 import ErrorToast from './components/ErrorToast'
 
 const API_URL = 'http://127.0.0.1:5000/predict'
-const heroPhrases = [
-  'AI-assisted triage support for radiologists',
-  'Instant Grad-CAM visualization for every MRI',
-  'Clinician-friendly interface for rapid decisions',
-]
 
 function App() {
   const [darkMode, setDarkMode] = useState(false)
+  const [activeSection, setActiveSection] = useState('home')
   const [selectedFile, setSelectedFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState(null)
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
-  const [phraseIndex, setPhraseIndex] = useState(0)
-  const [charIndex, setCharIndex] = useState(0)
 
   const uploadSectionRef = useRef(null)
 
@@ -37,22 +34,6 @@ function App() {
       document.documentElement.classList.remove('dark')
     }
   }, [darkMode])
-
-  useEffect(() => {
-    const currentPhrase = heroPhrases[phraseIndex]
-    if (charIndex < currentPhrase.length) {
-      const timeout = setTimeout(() => setCharIndex((prev) => prev + 1), 55)
-      return () => clearTimeout(timeout)
-    } else {
-      const timeout = setTimeout(() => {
-        setCharIndex(0)
-        setPhraseIndex((prev) => (prev + 1) % heroPhrases.length)
-      }, 1700)
-      return () => clearTimeout(timeout)
-    }
-  }, [charIndex, phraseIndex])
-
-  const displayedPhrase = heroPhrases[phraseIndex].slice(0, charIndex)
 
   const handleFileSelect = (file) => {
     if (!file) {
@@ -113,26 +94,30 @@ function App() {
   }
 
   const scrollToUpload = () => {
-    uploadSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    setActiveSection('analyze')
+    setTimeout(() => {
+      uploadSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 100)
   }
 
-  return (
-    <div className="relative min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 dark:from-gray-950 dark:via-gray-940 dark:to-gray-900 text-gray-900 dark:text-gray-100">
-      <div className="pointer-events-none fixed inset-0 opacity-30 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-100/40 to-transparent dark:from-blue-900/20" />
-      </div>
+  const handleNavigate = (section) => {
+    setActiveSection(section)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
-      <div className="relative">
-        <HeroSection
-          darkMode={darkMode}
-          onToggleTheme={() => setDarkMode((prev) => !prev)}
-          onGetStarted={scrollToUpload}
-          typewriterText={displayedPhrase}
-        />
-
-        <FeatureSection />
-
-        <section ref={uploadSectionRef} className="relative py-12 md:py-16 z-10">
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'home':
+        return <HomePage onGetStarted={scrollToUpload} />
+      case 'tumors':
+        return <TumorsPage />
+      case 'model':
+        return <ModelPage />
+      case 'analyze':
+        return (
+          <>
+            <FeatureSection />
+            <section ref={uploadSectionRef} className="relative py-12 md:py-16 z-10">
           <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -207,7 +192,28 @@ function App() {
         </section>
 
         <WhyItMatters />
+          </>
+        )
+      default:
+        return <HomePage onGetStarted={scrollToUpload} />
+    }
+  }
 
+  return (
+    <div className="relative min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 dark:from-gray-950 dark:via-gray-940 dark:to-gray-900 text-gray-900 dark:text-gray-100">
+      <div className="pointer-events-none fixed inset-0 opacity-30 z-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-100/40 to-transparent dark:from-blue-900/20" />
+      </div>
+
+      <Navbar
+        darkMode={darkMode}
+        onToggleTheme={() => setDarkMode((prev) => !prev)}
+        onNavigate={handleNavigate}
+        activeSection={activeSection}
+      />
+
+      <div className="relative">
+        {renderContent()}
         <SiteFooter />
       </div>
 
