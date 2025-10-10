@@ -1,16 +1,23 @@
-import { Brain, Zap, TrendingUp, CheckCircle, Shield, Clock } from 'lucide-react'
+import { Brain, Zap, TrendingUp, CheckCircle, Shield, Clock, Sparkles } from 'lucide-react'
 
 const HomePage = ({ onGetStarted }) => {
   const stats = [
-    { label: 'Accuracy Rate', value: '96.4%', icon: TrendingUp },
-    { label: 'Processing Time', value: '<4s', icon: Zap },
-    { label: 'Models Trained', value: '3.2K+', icon: Brain },
+    { label: 'Accuracy Rate', value: '96.4%', icon: TrendingUp, color: 'from-emerald-500 to-teal-500' },
+    { label: 'Processing Time', value: '<4s', icon: Zap, color: 'from-amber-500 to-orange-500' },
+    { label: 'Models Trained', value: '3.2K+', icon: Brain, color: 'from-purple-500 to-pink-500' },
   ]
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center pt-20 pb-12 bg-white">
-      <div className="max-w-[1400px] mx-auto px-8 sm:px-12">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+    <section className="relative min-h-screen flex items-center justify-center pt-24 pb-20 overflow-hidden">
+      {/* Premium Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 -left-20 w-96 h-96 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 -right-20 w-96 h-96 bg-gradient-to-br from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-purple-300/10 to-pink-300/10 rounded-full blur-3xl" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-12 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-20 items-center">
           {/* Left Content */}
           <div className="space-y-8">
             <div className="inline-flex items-center gap-2 px-5 py-2 bg-indigo-600 rounded-full shadow-lg">

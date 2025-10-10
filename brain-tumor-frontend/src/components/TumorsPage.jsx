@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion'
 import { AlertCircle, Brain, Activity, Microscope } from 'lucide-react'
 
 const TumorsPage = () => {
@@ -69,39 +68,31 @@ const TumorsPage = () => {
   }
 
   return (
-    <section className="relative min-h-screen pt-20 pb-12 bg-white">
+    <section className="relative min-h-screen pt-20 pb-16 bg-gray-50">
       <div className="max-w-[1400px] mx-auto px-8 sm:px-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-100 rounded-full mb-4">
-            <AlertCircle className="w-4 h-4 text-red-600" />
-            <span className="text-sm font-medium text-red-700">
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-5 py-2 bg-red-600 rounded-full mb-6 shadow-lg">
+            <AlertCircle className="w-4 h-4 text-white" />
+            <span className="text-sm font-bold text-white uppercase tracking-wide">
               Medical Reference Guide
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-gray-900 mb-4">
+          <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-6">
             Brain Tumor Types
           </h2>
-          <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto font-normal leading-relaxed">
-            Our AI model detects and classifies three primary types of brain tumors with high accuracy.
-            Understanding each type helps in diagnosis and treatment planning.
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Our AI model detects and classifies three primary types of brain tumors with exceptional accuracy. Understanding each type is crucial for diagnosis and treatment.
           </p>
-        </motion.div>
+        </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {tumorTypes.map((tumor, index) => {
             const Icon = tumor.icon
             const colors = colorClasses[tumor.color]
             return (
-              <motion.div
+              <div
                 key={tumor.name}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.15 }}
-                className={`rounded-2xl border-2 ${colors.border} ${colors.bg} p-6 hover:shadow-xl transition-shadow`}
+                className={`rounded-2xl border-2 ${colors.border} ${colors.bg} p-8 shadow-lg hover:shadow-2xl transition-shadow bg-white`}
               >
                 <div className="flex items-start gap-4 mb-4">
                   <div className={`${colors.icon} p-3 rounded-xl shadow-lg`}>
@@ -154,42 +145,62 @@ const TumorsPage = () => {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             )
           })}
         </div>
 
         {/* Additional Info Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="mt-16 bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-8 border border-blue-200 dark:border-blue-800"
-        >
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+        <div className="mt-20 bg-blue-50 rounded-2xl p-10 border-2 border-blue-200 shadow-lg">
+
+          <h3 className="text-3xl font-black text-gray-900 mb-6">
             Early Detection Saves Lives
           </h3>
-          <div className="grid md:grid-cols-2 gap-6 text-gray-700 dark:text-gray-300">
+          <div className="grid md:grid-cols-2 gap-8 text-gray-700">
             <div>
-              <h4 className="font-semibold text-lg mb-2">Why Early Detection Matters:</h4>
-              <ul className="space-y-2 text-sm">
-                <li>• Increases treatment success rate by up to 90%</li>
-                <li>• Allows for less invasive surgical options</li>
-                <li>• Reduces long-term neurological damage</li>
-                <li>• Improves quality of life outcomes</li>
+              <h4 className="font-bold text-xl mb-4 text-indigo-600">Why Early Detection Matters:</h4>
+              <ul className="space-y-3 text-base">
+                <li className="flex items-start gap-2">
+                  <span className="text-indigo-600 font-bold">•</span>
+                  <span>Increases treatment success rate by up to 90%</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-indigo-600 font-bold">•</span>
+                  <span>Allows for less invasive surgical options</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-indigo-600 font-bold">•</span>
+                  <span>Reduces long-term neurological damage</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-indigo-600 font-bold">•</span>
+                  <span>Improves quality of life outcomes</span>
+                </li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold text-lg mb-2">Our AI Advantage:</h4>
-              <ul className="space-y-2 text-sm">
-                <li>• 96.4% accuracy across all tumor types</li>
-                <li>• Instant analysis in under 4 seconds</li>
-                <li>• Grad-CAM visualization for transparency</li>
-                <li>• Supports radiologist decision-making</li>
+              <h4 className="font-bold text-xl mb-4 text-indigo-600">Our AI Advantage:</h4>
+              <ul className="space-y-3 text-base">
+                <li className="flex items-start gap-2">
+                  <span className="text-indigo-600 font-bold">•</span>
+                  <span>96.4% accuracy across all tumor types</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-indigo-600 font-bold">•</span>
+                  <span>Instant analysis in under 4 seconds</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-indigo-600 font-bold">•</span>
+                  <span>Grad-CAM visualization for transparency</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-indigo-600 font-bold">•</span>
+                  <span>Supports radiologist decision-making</span>
+                </li>
               </ul>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   )
