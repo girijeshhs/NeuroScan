@@ -70,9 +70,21 @@ try:
     print("-"*70)
     conv_layers = []
     for i, layer in enumerate(model.layers):
-        if isinstance(layer, keras.layers.Conv2D):
+        if isinstance(layer, (keras.layers.Conv2D, keras.layers.SeparableConv2D)):
             conv_layers.append(layer.name)
-            print(f"  {i:2d}. {layer.name:30s} - Shape: {layer.output_shape}")
+            layer_type = "SeparableConv2D" if isinstance(layer, keras.layers.SeparableConv2D) else "Conv2D"
+            print(f"  {i:2d}. {layer.name:30s} ({layer_type}) - Shape: {layer.output_shape}")
+    
+    # If no conv layers found in top level, check nested models
+    if not conv_layers:
+        print("  Checking nested models...")
+        for i, layer in enumerate(model.layers):
+            if hasattr(layer, 'layers'):
+                for j, sublayer in enumerate(layer.layers):
+                    if isinstance(sublayer, (keras.layers.Conv2D, keras.layers.SeparableConv2D)):
+                        conv_layers.append(sublayer.name)
+                        layer_type = "SeparableConv2D" if isinstance(sublayer, keras.layers.SeparableConv2D) else "Conv2D"
+                        print(f"  {i}.{j}. {sublayer.name:30s} ({layer_type}) - Shape: {sublayer.output_shape}")
     
     if conv_layers:
         last_conv = conv_layers[-1]
@@ -90,6 +102,10 @@ try:
     print("\n🧪 Testing model with dummy input...")
     dummy_input = np.random.rand(1, 299, 299, 3).astype('float32')
     try:
+        predictions = model.predict(dummy_input, verbose=0)
+        print(f"✅ Prediction successful! Output shape: {predictions.shape}")
+    except Exception as e:
+        print(f"❌ Prediction failed: {e}")
     
     # Summary
     print("\n" + "="*70)

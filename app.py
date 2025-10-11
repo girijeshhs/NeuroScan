@@ -192,22 +192,32 @@ def create_gradcam_overlay(original_image, heatmap, alpha=0.7):
 def get_last_conv_layer_name(model):
     """
     Automatically find the last convolutional layer in the model.
+    Supports both Conv2D (VGG, ResNet) and SeparableConv2D (Xception, MobileNet).
     """
     # Manual override - uncomment and set your layer name if auto-detection fails
     # MANUAL_LAYER_NAME = "block5_conv3"  # For VGG16
-    # MANUAL_LAYER_NAME = "conv2d_12"     # Example for other models
+    # MANUAL_LAYER_NAME = "block14_sepconv2"  # For Xception
     # if MANUAL_LAYER_NAME:
     #     print(f"Using manual layer override: {MANUAL_LAYER_NAME}")
     #     return MANUAL_LAYER_NAME
     
     conv_layers = []
     for layer in model.layers:
-        # Check if it's a Conv2D layer
-        if isinstance(layer, keras.layers.Conv2D):
+        # Check if it's a Conv2D or SeparableConv2D layer
+        if isinstance(layer, (keras.layers.Conv2D, keras.layers.SeparableConv2D)):
             conv_layers.append(layer.name)
     
     if not conv_layers:
-        # If no Conv2D layer found, raise an error
+        # If no convolutional layers found, check nested models (Functional API)
+        print("Searching nested models for convolutional layers...")
+        for layer in model.layers:
+            if hasattr(layer, 'layers'):  # Nested model
+                for sublayer in layer.layers:
+                    if isinstance(sublayer, (keras.layers.Conv2D, keras.layers.SeparableConv2D)):
+                        conv_layers.append(sublayer.name)
+    
+    if not conv_layers:
+        # If still no Conv2D layer found, raise an error
         print("No convolutional layers found in model!")
         print("Available layer types:")
         for layer in model.layers:
