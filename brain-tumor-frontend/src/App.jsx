@@ -7,7 +7,6 @@ import Navbar from './components/Navbar.jsx'
 import HomePage from './components/HomePage.jsx'
 import TumorsPage from './components/TumorsPage.jsx'
 import ModelPage from './components/ModelPage.jsx'
-import FeatureSection from './components/FeatureSection'
 import SiteFooter from './components/SiteFooter'
 import UploadBox from './components/UploadBox'
 import ResultCard from './components/ResultCard'
@@ -257,9 +256,6 @@ function App() {
                 </div>
               </div>
             </section>
-
-            {/* Features Section Below */}
-            <FeatureSection />
           </>
         )
       default:
