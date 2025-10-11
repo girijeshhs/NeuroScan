@@ -71,12 +71,6 @@ const TumorsPage = () => {
     <section className="relative min-h-screen pt-20 pb-16 bg-[#0f1419]">
       <div className="max-w-[1400px] mx-auto px-8 sm:px-12">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#1e2332] border border-[#7c2d12]/50 rounded-md mb-6">
-            <AlertCircle className="w-3.5 h-3.5 text-[#c97d8f]" />
-            <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
-              Clinical Reference
-            </span>
-          </div>
           <h2 className="text-5xl md:text-6xl font-bold text-slate-100 mb-6">
             Tumor Classifications
           </h2>
