@@ -20,16 +20,13 @@ print(f"Model loaded successfully from {MODEL_PATH}")
 print(f"Model input shape: {model.input_shape}")
 print(f"Model output shape: {model.output_shape}")
 
-# Define class labels - UPDATE THESE BASED ON YOUR MODEL'S CLASSES
-# Common brain tumor classification:
-# If your model has 2 classes: {0: "No Tumor", 1: "Tumor"}
-# If your model has 4 classes: {0: "Glioma", 1: "Meningioma", 2: "Pituitary", 3: "No Tumor"}
-# Adjust based on how your model was trained!
+# Define class labels - CORRECT ORDER from 7k Brain Tumor Dataset
+# ✅ This matches the alphabetical folder order from training
 CLASS_LABELS = {
     0: "Glioma Tumor",
     1: "Meningioma Tumor", 
-    2: "Pituitary Tumor",
-    3: "No Tumor"
+    2: "No Tumor",
+    3: "Pituitary Tumor"
 }
 
 # If you're unsure about your model's classes, check the output shape
@@ -37,9 +34,10 @@ CLASS_LABELS = {
 
 def preprocess_image(image, target_size=(299, 299)):
     """
-    Preprocess the uploaded image for model prediction.
+    Preprocess the uploaded image for Xception model prediction.
+    ✅ Matches the preprocessing used during training on 7k dataset.
     """
-    # Convert to RGB if needed
+    # Convert to RGB if needed (handles grayscale MRI images)
     if image.mode != 'RGB':
         image = image.convert('RGB')
     
@@ -49,11 +47,17 @@ def preprocess_image(image, target_size=(299, 299)):
     # Convert to numpy array
     img_array = np.array(image)
     
-    # Normalize pixel values (adjust based on your model's training preprocessing)
+    # If grayscale somehow still present, convert to RGB
+    if img_array.shape[-1] == 1:
+        img_array = np.stack((img_array,)*3, axis=-1)
+    
+    # ✅ [0, 1] normalization - matches training preprocessing
     img_array = img_array.astype('float32') / 255.0
     
     # Add batch dimension
     img_array = np.expand_dims(img_array, axis=0)
+    
+    print(f"✅ Preprocessed: Shape={img_array.shape}, Range=[{img_array.min():.3f}, {img_array.max():.3f}]")
     
     return img_array
 
@@ -134,33 +138,33 @@ def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None
         heatmap = heatmap / max_val
     
     heatmap_np = heatmap.numpy()
-    print(f"Heatmap generated - Shape: {heatmap_np.shape}, Min: {heatmap_np.min():.3f}, Max: {heatmap_np.max():.3f}")
+    
+    # ✅ Improved normalization to avoid "all-over" heatmaps
+    heatmap_np = heatmap_np / (np.max(heatmap_np) + 1e-10)
+    
+    print(f"✅ Heatmap generated - Shape: {heatmap_np.shape}, Range: [{heatmap_np.min():.3f}, {heatmap_np.max():.3f}]")
     
     return heatmap_np
 
-def create_gradcam_overlay(original_image, heatmap, alpha=0.7):
+def create_gradcam_overlay(original_image, heatmap, alpha=0.4):
     """
     Create an overlay of the Grad-CAM heatmap on the original image.
-    Enhanced version with MAXIMUM visibility - AGGRESSIVE FIX.
+    ✅ Optimized for clear, focused visualization.
     """
     # Resize heatmap to match original image size
     heatmap_resized = cv2.resize(heatmap, (original_image.width, original_image.height))
     
-    # AGGRESSIVE normalization - ensure we have variation
+    # Ensure non-negative values
     heatmap_resized = np.maximum(heatmap_resized, 0)
     
-    # Apply power transformation to increase contrast
-    heatmap_resized = np.power(heatmap_resized, 0.5)  # Square root for better visibility
-    
+    # Normalize to [0, 1]
     if heatmap_resized.max() > 0:
         heatmap_resized = heatmap_resized / heatmap_resized.max()
     
-    print(f"DEBUG: Heatmap after processing - Min: {heatmap_resized.min():.4f}, Max: {heatmap_resized.max():.4f}, Mean: {heatmap_resized.mean():.4f}")
+    print(f"✅ Heatmap resized - Min: {heatmap_resized.min():.4f}, Max: {heatmap_resized.max():.4f}")
     
-    # Convert heatmap to RGB colormap with FULL intensity
+    # Convert to RGB colormap (JET colormap: red=high, blue=low)
     heatmap_colored = np.uint8(255 * heatmap_resized)
-    
-    # Apply JET colormap for maximum visibility
     heatmap_colored = cv2.applyColorMap(heatmap_colored, cv2.COLORMAP_JET)
     
     print(f"DEBUG: Heatmap colored - Shape: {heatmap_colored.shape}, Range: {heatmap_colored.min()} to {heatmap_colored.max()}")
@@ -191,41 +195,49 @@ def create_gradcam_overlay(original_image, heatmap, alpha=0.7):
 
 def get_last_conv_layer_name(model):
     """
-    Automatically find the last convolutional layer in the model.
-    Supports both Conv2D (VGG, ResNet) and SeparableConv2D (Xception, MobileNet).
+    Find the last convolutional layer for Grad-CAM.
+    ✅ Optimized for Xception architecture.
     """
-    # Manual override - uncomment and set your layer name if auto-detection fails
-    # MANUAL_LAYER_NAME = "block5_conv3"  # For VGG16
-    # MANUAL_LAYER_NAME = "block14_sepconv2"  # For Xception
-    # if MANUAL_LAYER_NAME:
-    #     print(f"Using manual layer override: {MANUAL_LAYER_NAME}")
-    #     return MANUAL_LAYER_NAME
+    # ✅ For Xception, use the activation layer after block14_sepconv2
+    # This gives better Grad-CAM results than the raw conv layer
+    XCEPTION_LAYER = "block14_sepconv2_act"
     
+    # Try Xception layer first
+    try:
+        model.get_layer(XCEPTION_LAYER)
+        print(f"✅ Using Xception Grad-CAM layer: {XCEPTION_LAYER}")
+        return XCEPTION_LAYER
+    except:
+        print(f"⚠️  {XCEPTION_LAYER} not found, searching for alternatives...")
+    
+    # Fallback: Find last conv/separable conv layer
     conv_layers = []
     for layer in model.layers:
-        # Check if it's a Conv2D or SeparableConv2D layer
+        # Check for Conv2D or SeparableConv2D layers
         if isinstance(layer, (keras.layers.Conv2D, keras.layers.SeparableConv2D)):
+            conv_layers.append(layer.name)
+        # Also check for Activation layers (Xception uses separate activation layers)
+        elif isinstance(layer, keras.layers.Activation) and 'conv' in layer.name.lower():
             conv_layers.append(layer.name)
     
     if not conv_layers:
-        # If no convolutional layers found, check nested models (Functional API)
-        print("Searching nested models for convolutional layers...")
+        # Check nested models (Functional API)
+        print("Searching nested models...")
         for layer in model.layers:
-            if hasattr(layer, 'layers'):  # Nested model
+            if hasattr(layer, 'layers'):
                 for sublayer in layer.layers:
                     if isinstance(sublayer, (keras.layers.Conv2D, keras.layers.SeparableConv2D)):
                         conv_layers.append(sublayer.name)
     
     if not conv_layers:
-        # If still no Conv2D layer found, raise an error
-        print("No convolutional layers found in model!")
-        print("Available layer types:")
-        for layer in model.layers:
+        print("❌ No convolutional layers found!")
+        print("Available layers:")
+        for layer in model.layers[:10]:  # Show first 10
             print(f"  - {layer.name}: {layer.__class__.__name__}")
         raise ValueError("No convolutional layer found in the model")
     
     last_conv = conv_layers[-1]
-    print(f"Found {len(conv_layers)} conv layers. Using last one: {last_conv}")
+    print(f"✅ Found {len(conv_layers)} conv layers. Using: {last_conv}")
     return last_conv
 
 def image_to_base64(img_array):
