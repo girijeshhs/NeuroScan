@@ -18,7 +18,7 @@ const Navbar = ({ darkMode, onToggleTheme, onNavigate, activeSection }) => {
     { id: 'home', label: 'Dashboard', icon: Home },
     { id: 'analyze', label: 'Analysis', icon: Activity },
     { id: 'tumors', label: 'Classifications', icon: Layers },
-    { id: 'model', label: 'Architecture', icon: FlaskConical },
+    { id: 'model', label: 'Documentation', icon: FlaskConical },
   ]
 
   return (

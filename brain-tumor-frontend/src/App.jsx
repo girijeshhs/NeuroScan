@@ -106,7 +106,7 @@ function App() {
   const renderContent = () => {
     switch (activeSection) {
       case 'home':
-        return <HomePage onGetStarted={scrollToUpload} />
+        return <HomePage onGetStarted={scrollToUpload} onNavigate={handleNavigate} />
       case 'tumors':
         return <TumorsPage />
       case 'model':
@@ -223,7 +223,7 @@ function App() {
           </>
         )
       default:
-        return <HomePage onGetStarted={scrollToUpload} />
+        return <HomePage onGetStarted={scrollToUpload} onNavigate={handleNavigate} />
     }
   }
 

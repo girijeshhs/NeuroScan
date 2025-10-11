@@ -1,6 +1,6 @@
 import { TrendingUp, Clock, Database, ArrowRight, Activity, FileText, BarChart3, CheckCircle2 } from 'lucide-react'
 
-const HomePage = ({ onGetStarted }) => {
+const HomePage = ({ onGetStarted, onNavigate }) => {
   const stats = [
     { label: 'Diagnostic Accuracy', value: '96.4%', icon: TrendingUp, color: 'border-forest', trend: '+2.3%' },
     { label: 'Average Analysis Time', value: '3.8s', icon: Clock, color: 'border-burgundy', trend: '-0.5s' },
@@ -47,7 +47,10 @@ const HomePage = ({ onGetStarted }) => {
                   Begin Analysis
                   <ArrowRight className="w-4 h-4" />
                 </button>
-                <button className="btn-secondary px-6 py-2.5 rounded-md text-slate-300 font-semibold text-sm">
+                <button 
+                  onClick={() => onNavigate && onNavigate('model')}
+                  className="btn-secondary px-6 py-2.5 rounded-md text-slate-300 font-semibold text-sm"
+                >
                   View Documentation
                 </button>
               </div>
