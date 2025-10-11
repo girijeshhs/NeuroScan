@@ -8,7 +8,7 @@ from tensorflow import keras
 import numpy as np
 
 # Your model path
-MODEL_PATH = "/Users/girijeshs/Downloads/Brave/VGG16_final.keras"
+MODEL_PATH = "/Users/girijeshs/Desktop/chrome/Xception_95pct_model.keras"
 
 print("="*70)
 print("🧠 BRAIN TUMOR MODEL CONFIGURATION TEST")
@@ -86,17 +86,10 @@ try:
         print("Your model might not support Grad-CAM visualization.")
         print("Grad-CAM requires convolutional layers.")
     
-    # Test prediction with dummy data
-    print("\n🧪 TESTING PREDICTION:")
-    print("-"*70)
-    dummy_input = np.random.rand(1, 224, 224, 3).astype('float32')
-    predictions = model.predict(dummy_input, verbose=0)
-    print(f"Prediction output shape: {predictions.shape}")
-    print(f"Sample prediction values: {predictions[0]}")
-    predicted_class = np.argmax(predictions[0])
-    confidence = predictions[0][predicted_class]
-    print(f"Predicted class: {predicted_class}")
-    print(f"Confidence: {confidence:.2%}")
+    # Test with dummy input
+    print("\n🧪 Testing model with dummy input...")
+    dummy_input = np.random.rand(1, 299, 299, 3).astype('float32')
+    try:
     
     # Summary
     print("\n" + "="*70)

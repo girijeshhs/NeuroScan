@@ -13,7 +13,7 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 # Load the trained model
-MODEL_PATH = "/Users/girijeshs/Downloads/Brave/VGG16_final.keras"
+MODEL_PATH = "/Users/girijeshs/Desktop/chrome/Xception_95pct_model.keras"
 model = keras.models.load_model(MODEL_PATH)
 
 print(f"Model loaded successfully from {MODEL_PATH}")
@@ -35,7 +35,7 @@ CLASS_LABELS = {
 # If you're unsure about your model's classes, check the output shape
 # The number of output neurons = number of classes
 
-def preprocess_image(image, target_size=(224, 224)):
+def preprocess_image(image, target_size=(299, 299)):
     """
     Preprocess the uploaded image for model prediction.
     """
@@ -351,7 +351,7 @@ def test_gradcam():
     """
     try:
         # Create a random test image
-        test_img = np.random.rand(224, 224, 3).astype('float32')
+        test_img = np.random.rand(299, 299, 3).astype('float32')
         test_img_pil = Image.fromarray((test_img * 255).astype('uint8'))
         img_array = np.expand_dims(test_img, axis=0)
         
