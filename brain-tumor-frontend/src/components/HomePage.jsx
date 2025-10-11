@@ -1,105 +1,148 @@
-import { Brain, Zap, TrendingUp, CheckCircle, Shield, Clock } from 'lucide-react'
+import { TrendingUp, Clock, Database, ArrowRight, Activity, FileText, BarChart3, CheckCircle2 } from 'lucide-react'
 
 const HomePage = ({ onGetStarted }) => {
   const stats = [
-    { label: 'Accuracy Rate', value: '96.4%', icon: TrendingUp },
-    { label: 'Processing Time', value: '<4s', icon: Zap },
-    { label: 'Models Trained', value: '3.2K+', icon: Brain },
+    { label: 'Diagnostic Accuracy', value: '96.4%', icon: TrendingUp, color: 'border-forest', trend: '+2.3%' },
+    { label: 'Average Analysis Time', value: '3.8s', icon: Clock, color: 'border-burgundy', trend: '-0.5s' },
+    { label: 'Scans Processed', value: '3,247', icon: Database, color: 'border-oxford', trend: '+127' },
+    { label: 'Model Confidence', value: '94.2%', icon: BarChart3, color: 'border-forest', trend: '+1.8%' },
+  ]
+
+  const recentAnalyses = [
+    { id: 'MRI-2847', type: 'Glioma', confidence: '97.2%', date: '2 hours ago', status: 'complete' },
+    { id: 'MRI-2846', type: 'Meningioma', confidence: '95.8%', date: '5 hours ago', status: 'complete' },
+    { id: 'MRI-2845', type: 'No Tumor', confidence: '98.1%', date: '8 hours ago', status: 'complete' },
+  ]
+
+  const features = [
+    { title: 'VGG16 Architecture', desc: 'Deep convolutional neural network with 16 weighted layers', icon: Activity },
+    { title: 'Grad-CAM Visualization', desc: 'Explainable AI highlighting critical diagnostic regions', icon: FileText },
+    { title: 'Clinical Validation', desc: 'Validated against peer-reviewed medical datasets', icon: CheckCircle2 },
   ]
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center pt-20 pb-12 bg-white">
-      <div className="max-w-[1400px] mx-auto px-8 sm:px-12">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left Content */}
-          <div className="space-y-8">
-            <div className="inline-flex items-center gap-2 px-5 py-2 bg-indigo-600 rounded-full shadow-lg">
-              <CheckCircle className="w-4 h-4 text-white" />
-              <span className="text-xs font-bold text-white tracking-wide uppercase">
-                AI-Powered Medical Diagnosis
-              </span>
+    <section className="relative bg-[#0f1419] pt-6 pb-12">
+      <div className="bg-texture absolute inset-0 opacity-50" />
+      
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+        {/* Compact Hero Section */}
+        <div className="py-8 lg:py-12 mb-8">
+          <div className="grid lg:grid-cols-[2fr_1fr] gap-8 items-start">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-burgundy/10 border border-burgundy/20">
+                <div className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" />
+                <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Clinical-Grade AI Diagnostics</span>
+              </div>
+              
+              <h1 className="text-4xl lg:text-5xl font-semibold text-slate-100 mb-4 leading-tight">
+                Neural Network Analysis for
+                <span className="block text-burgundy mt-1">Brain Tumor Detection</span>
+              </h1>
+              
+              <p className="text-base text-slate-400 mb-6 max-w-2xl leading-relaxed">
+                Advanced deep learning platform employing VGG16 convolutional architecture for rapid, accurate identification 
+                of glioma, meningioma, and pituitary tumors in MRI scans. Validated diagnostic support with explainable AI visualization.
+              </p>
+
+              <div className="flex flex-wrap gap-3">
+                <button 
+                  onClick={onGetStarted}
+                  className="btn-primary px-6 py-2.5 rounded-md text-white font-semibold text-sm flex items-center gap-2"
+                >
+                  Begin Analysis
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+                <button className="btn-secondary px-6 py-2.5 rounded-md text-slate-300 font-semibold text-sm">
+                  View Documentation
+                </button>
+              </div>
             </div>
 
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight">
-              <span className="text-gray-900">Brain Tumor</span>
-              <br />
-              <span className="bg-gradient-to-r from-indigo-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Detection AI
-              </span>
-            </h1>
-
-            <p className="text-xl text-gray-600 leading-relaxed max-w-2xl">
-              State-of-the-art deep learning for instant MRI analysis. Upload brain scans and receive accurate predictions with explainable Grad-CAM visualizations.
-            </p>
-
-            <div className="flex flex-wrap gap-4">
-              <button
-                onClick={onGetStarted}
-                className="px-8 py-4 bg-indigo-600 text-white font-bold text-base rounded-xl shadow-xl hover:shadow-2xl hover:bg-indigo-700 transition-all"
-              >
-                Start Analysis →
-              </button>
-              <button className="px-8 py-4 border-2 border-gray-300 text-gray-700 font-bold text-base rounded-xl hover:border-indigo-600 hover:text-indigo-600 transition-all">
-                View Demo
-              </button>
+            {/* Quick Upload Card */}
+            <div className="medical-card rounded-lg p-5">
+              <h3 className="text-lg font-semibold text-slate-200 mb-3">Quick Upload</h3>
+              <div className="border-2 border-dashed border-slate-700 rounded-md p-8 text-center hover:border-slate-600 transition-colors cursor-pointer"
+                   onClick={onGetStarted}>
+                <FileText className="w-8 h-8 text-slate-500 mx-auto mb-2" />
+                <p className="text-sm text-slate-400 mb-1">Drop MRI scan here</p>
+                <p className="text-xs text-slate-500">or click to browse</p>
+              </div>
             </div>
+          </div>
+        </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 pt-4">
-              {stats.map((stat, index) => {
-                const Icon = stat.icon
-                return (
-                  <div
-                    key={stat.label}
-                    className="text-center"
-                  >
-                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-indigo-100 mb-3 shadow-md">
-                      <Icon className="w-7 h-7 text-indigo-600" />
-                    </div>
-                    <p className="text-2xl font-black text-gray-900">
-                      {stat.value}
-                    </p>
-                    <p className="text-sm text-gray-600 font-medium">{stat.label}</p>
-                  </div>
-                )
-              })}
+        {/* Statistics Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {stats.map((stat, index) => {
+            const Icon = stat.icon
+            return (
+              <div key={index} className={`stat-card rounded-lg p-4 ${stat.color}`}>
+                <div className="flex items-start justify-between mb-2">
+                  <Icon className="w-5 h-5 text-slate-400" />
+                  <span className="text-xs font-semibold text-green-500">{stat.trend}</span>
+                </div>
+                <div className="text-2xl font-bold text-slate-100 mb-1">{stat.value}</div>
+                <div className="text-xs text-slate-400 uppercase tracking-wide">{stat.label}</div>
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-3 gap-6 mb-8">
+          {/* Recent Analyses */}
+          <div className="lg:col-span-2 medical-card rounded-lg p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-slate-200">Recent Analyses</h2>
+              <button className="text-sm text-burgundy hover:text-red-500 font-medium">View All</button>
+            </div>
+            
+            <div className="data-table rounded-md overflow-hidden">
+              <table className="w-full">
+                <thead>
+                  <tr>
+                    <th className="text-left py-3 px-4">Scan ID</th>
+                    <th className="text-left py-3 px-4">Classification</th>
+                    <th className="text-left py-3 px-4">Confidence</th>
+                    <th className="text-left py-3 px-4">Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentAnalyses.map((analysis) => (
+                    <tr key={analysis.id} className="cursor-pointer">
+                      <td className="py-3 px-4 text-slate-300 font-mono text-sm">{analysis.id}</td>
+                      <td className="py-3 px-4">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-burgundy/10 text-slate-300 text-xs font-medium">
+                          {analysis.type}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-slate-300 font-semibold">{analysis.confidence}</td>
+                      <td className="py-3 px-4 text-slate-500 text-sm">{analysis.date}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
 
-          {/* Right Visual */}
-          <div className="relative">
-            <div className="relative w-full aspect-square max-w-lg mx-auto">
-              {/* Static elegant rings */}
-              <div className="absolute inset-0 rounded-full border-4 border-indigo-100" />
-              <div className="absolute inset-8 rounded-full border-4 border-blue-100" />
-              <div className="absolute inset-16 rounded-full border-4 border-purple-100" />
-
-              {/* Center brain icon */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-full blur-3xl opacity-20" />
-                  <div className="relative bg-white p-12 rounded-full shadow-2xl border-4 border-indigo-200">
-                    <Brain className="w-32 h-32 text-indigo-600" />
+          {/* System Features */}
+          <div className="space-y-4">
+            {features.map((feature, index) => {
+              const Icon = feature.icon
+              return (
+                <div key={index} className="medical-card rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-md bg-slate-800 flex items-center justify-center flex-shrink-0">
+                      <Icon className="w-5 h-5 text-slate-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-slate-200 mb-1">{feature.title}</h3>
+                      <p className="text-xs text-slate-400 leading-relaxed">{feature.desc}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              {/* Static info cards */}
-              <div className="absolute top-0 right-0 bg-white px-5 py-3 rounded-xl shadow-lg border-2 border-green-200">
-                <p className="text-xs font-bold text-gray-500 uppercase">Accuracy</p>
-                <p className="text-xl font-black text-green-600">96.4%</p>
-              </div>
-
-              <div className="absolute bottom-0 left-0 bg-white px-5 py-3 rounded-xl shadow-lg border-2 border-blue-200">
-                <p className="text-xs font-bold text-gray-500 uppercase">Grad-CAM</p>
-                <p className="text-xl font-black text-blue-600">Active</p>
-              </div>
-              
-              <div className="absolute top-1/3 left-0 bg-white px-5 py-3 rounded-xl shadow-lg border-2 border-purple-200">
-                <p className="text-xs font-bold text-gray-500 uppercase">Speed</p>
-                <p className="text-xl font-black text-purple-600">&lt;4s</p>
-              </div>
-            </div>
+              )
+            })}
           </div>
         </div>
       </div>

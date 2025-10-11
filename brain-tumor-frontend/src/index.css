@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Professional Medical Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
 @layer base {
   * {
     -webkit-font-smoothing: antialiased;
@@ -10,75 +13,164 @@
   }
   
   html {
-    scroll-behavior: auto;
+    scroll-behavior: smooth;
   }
   
   body {
-    @apply bg-white;
+    @apply bg-slate-900;
     @apply min-h-screen font-sans antialiased;
     -webkit-overflow-scrolling: touch;
-    font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #0f1419;
+    color: #e2e8f0;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bold tracking-tight;
-    letter-spacing: -0.02em;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    @apply font-semibold tracking-tight;
+    letter-spacing: -0.01em;
   }
   
   p {
     @apply tracking-normal;
+    line-height: 1.65;
   }
   
   button {
     @apply font-medium;
+    font-family: 'Inter', system-ui, sans-serif;
   }
 }
 
 @layer components {
-  .gradient-border {
-    @apply relative rounded-2xl;
+  /* Professional Medical Card */
+  .medical-card {
+    background: linear-gradient(135deg, rgba(26, 29, 41, 0.95) 0%, rgba(20, 24, 35, 0.95) 100%);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
   }
   
-  .gradient-border::before {
-    content: '';
-    @apply absolute inset-0 rounded-2xl p-[2px] bg-gradient-to-r from-blue-500 to-indigo-500;
-    @apply -z-10;
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+  .medical-card:hover {
+    border-color: rgba(148, 163, 184, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+  }
+
+  /* Refined Button */
+  .btn-primary {
+    background: linear-gradient(135deg, #7c2d12 0%, #991b1b 100%);
+    border: 1px solid rgba(185, 28, 28, 0.3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    transition: all 0.2s ease;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(51, 65, 85, 0.9);
+    border-color: rgba(148, 163, 184, 0.3);
+  }
+
+  /* Stat Card */
+  .stat-card {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-left: 3px solid;
+    transition: all 0.2s ease;
+  }
+
+  .stat-card:hover {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(148, 163, 184, 0.2);
+  }
+
+  /* Data Table */
+  .data-table {
+    background: rgba(26, 29, 41, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+  }
+
+  .data-table th {
+    background: rgba(15, 20, 25, 0.8);
+    border-bottom: 2px solid rgba(148, 163, 184, 0.1);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+  }
+
+  .data-table td {
+    border-bottom: 1px solid rgba(148, 163, 184, 0.05);
+    font-size: 0.875rem;
+  }
+
+  .data-table tr:hover td {
+    background: rgba(51, 65, 85, 0.3);
   }
 }
 
 @layer utilities {
-  .orb-glow {
-    box-shadow: 0 20px 60px -25px rgba(59, 130, 246, 0.45), 0 30px 80px -40px rgba(99, 102, 241, 0.35);
+  .text-burgundy {
+    color: #dc2626;
+  }
+
+  .text-forest {
+    color: #16a34a;
+  }
+
+  .text-oxford {
+    color: #1e40af;
+  }
+
+  .border-burgundy {
+    border-color: #7c2d12;
+  }
+
+  .border-forest {
+    border-color: #15803d;
+  }
+
+  .border-oxford {
+    border-color: #1e3a8a;
+  }
+
+  .bg-burgundy {
+    background-color: #7c2d12;
+  }
+
+  .bg-forest {
+    background-color: #15803d;
+  }
+
+  .bg-oxford {
+    background-color: #1e3a8a;
   }
 }
 
-@keyframes medical-scan {
-  0% {
-    transform: translateY(120%);
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.35;
-  }
-  50% {
-    opacity: 0.7;
-  }
-  80% {
-    opacity: 0.35;
-  }
-  100% {
-    transform: translateY(-120%);
-    opacity: 0;
-  }
+/* Subtle background texture */
+.bg-texture {
+  background-image: 
+    linear-gradient(rgba(148, 163, 184, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.02) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-.scan-overlay {
-  position: absolute;
-  inset: -20% 0;
-  background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.7) 45%, rgba(59, 130, 246, 0.45) 50%, rgba(255, 255, 255, 0.7) 55%, transparent 100%);
-  mix-blend-mode: screen;
-  animation: medical-scan 2.4s linear infinite;
+/* Professional divider */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(148, 163, 184, 0.2) 50%, transparent 100%);
 }
