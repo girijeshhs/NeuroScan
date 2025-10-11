@@ -29,11 +29,6 @@ const HomePage = ({ onGetStarted }) => {
         <div className="py-8 lg:py-12 mb-8">
           <div className="grid lg:grid-cols-[2fr_1fr] gap-8 items-start">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-burgundy/10 border border-burgundy/20">
-                <div className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" />
-                <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Clinical-Grade AI Diagnostics</span>
-              </div>
-              
               <h1 className="text-4xl lg:text-5xl font-semibold text-slate-100 mb-4 leading-tight">
                 Neural Network Analysis for
                 <span className="block text-burgundy mt-1">Brain Tumor Detection</span>

@@ -38,15 +38,14 @@ const Navbar = ({ darkMode, onToggleTheme, onNavigate, activeSection }) => {
             onClick={() => onNavigate('home')}
             className="flex items-center gap-3 group"
           >
-            <div className="w-8 h-8 rounded-md bg-gradient-to-br from-burgundy to-red-800 flex items-center justify-center shadow-md">
-              <span className="text-white font-bold text-sm">NS</span>
-            </div>
-            <div className="hidden sm:block">
-              <div className="text-base font-semibold text-slate-200" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+            <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-md flex items-center justify-center bg-gradient-to-br from-[#7c2d12] to-[#991b1b] shadow-md">
+                <span className="text-white font-bold text-sm">NS</span>
+              </div>
+              <div className="text-base font-semibold text-slate-200">
                 NeuroScan AI
               </div>
-              <div className="text-[10px] text-slate-500 uppercase tracking-wider">Clinical Diagnostics</div>
-            </div>
+            </motion.div>
           </button>
 
           {/* Desktop Navigation */}

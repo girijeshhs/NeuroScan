@@ -77,7 +77,7 @@ const TumorsPage = () => {
               Clinical Reference
             </span>
           </div>
-          <h2 className="text-5xl md:text-6xl font-serif text-slate-100 mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <h2 className="text-5xl md:text-6xl font-bold text-slate-100 mb-6">
             Tumor Classifications
           </h2>
           <p className="text-lg text-slate-400 max-w-3xl mx-auto leading-relaxed">
@@ -99,7 +99,7 @@ const TumorsPage = () => {
                     <Icon className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className={`text-xl font-serif ${colors.text} mb-2`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                    <h3 className={`text-xl font-semibold ${colors.text} mb-2`}>
                       {tumor.name}
                     </h3>
                     <p className="text-sm text-slate-400 leading-relaxed">
@@ -152,7 +152,7 @@ const TumorsPage = () => {
 
         {/* Clinical Evidence Section */}
         <div className="mt-16 medical-card border border-[#2d5f4c]/50 p-8">
-          <h3 className="text-3xl font-serif text-slate-100 mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <h3 className="text-3xl font-bold text-slate-100 mb-6">
             Clinical Validation
           </h3>
           <div className="grid md:grid-cols-2 gap-8">

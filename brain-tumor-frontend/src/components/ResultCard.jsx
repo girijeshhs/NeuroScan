@@ -39,7 +39,7 @@ const ResultCard = ({ result, previewUrl, onReset }) => {
               <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Completed</span>
             </div>
             <div className="w-px h-4 bg-slate-700" />
-            <h2 className="text-lg font-semibold text-slate-200" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+            <h2 className="text-lg font-semibold text-slate-200">
               Diagnostic Analysis
             </h2>
           </div>
@@ -78,7 +78,7 @@ const ResultCard = ({ result, previewUrl, onReset }) => {
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
             Tumor Classification
           </p>
-          <p className="text-xl font-semibold text-slate-100" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+          <p className="text-xl font-semibold text-slate-100">
             {isTumor && tumorType && tumorType !== 'None' ? tumorType : prediction}
           </p>
         </motion.div>

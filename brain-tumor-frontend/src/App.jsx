@@ -128,8 +128,8 @@ function App() {
                     <div className="medical-card rounded-lg overflow-hidden">
                       <div className="px-6 pt-6 pb-5">
                         <div className="flex flex-col gap-3 mb-5">
-                          <div>
-                            <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-slate-100" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+                          <div className="space-y-2">
+                            <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-slate-100">
                               Upload MRI Scan
                             </h2>
                             <p className="mt-2 text-sm text-slate-400 font-normal leading-relaxed">
@@ -203,7 +203,7 @@ function App() {
                             <div className="w-16 h-16 mx-auto mb-4 rounded-md bg-slate-800 flex items-center justify-center">
                               <Activity className="w-8 h-8 text-slate-500" />
                             </div>
-                            <h3 className="text-base font-semibold tracking-tight text-slate-200 mb-2" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+                            <h3 className="text-base font-semibold tracking-tight text-slate-200 mb-2">
                               Diagnostic Results
                             </h3>
                             <p className="text-sm text-slate-400 font-normal leading-relaxed max-w-xs mx-auto">

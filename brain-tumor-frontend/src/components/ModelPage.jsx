@@ -61,7 +61,7 @@ const ModelPage = () => {
               System Architecture
             </span>
           </div>
-          <h2 className="text-5xl md:text-6xl font-serif text-slate-100 mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <h2 className="text-5xl md:text-6xl font-bold text-slate-100 mb-6">
             VGG16 Neural Network
           </h2>
           <p className="text-lg text-slate-400 max-w-3xl mx-auto leading-relaxed">
@@ -94,7 +94,7 @@ const ModelPage = () => {
 
         {/* Architecture Table */}
         <div className="medical-card p-8 mb-16">
-          <h3 className="text-3xl font-serif text-slate-100 mb-8 flex items-center gap-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <h3 className="text-3xl font-bold text-slate-100 mb-8 flex items-center gap-3">
             <Layers className="w-7 h-7 text-[#6b9bd1]" />
             Network Architecture
           </h3>
@@ -128,7 +128,7 @@ const ModelPage = () => {
 
         {/* Performance Metrics */}
         <div className="medical-card border border-[#1e40af]/50 p-8">
-          <h3 className="text-3xl font-serif text-slate-100 mb-8 flex items-center gap-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <h3 className="text-3xl font-bold text-slate-100 mb-8 flex items-center gap-3">
             <TrendingUp className="w-7 h-7 text-[#6b9bd1]" />
             Classification Performance
           </h3>
@@ -138,7 +138,7 @@ const ModelPage = () => {
                 key={perf.class}
                 className="bg-[#1e2332] rounded-lg p-6 border border-slate-700/50"
               >
-                <h4 className="text-xl font-serif text-slate-200 mb-5" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                <h4 className="text-xl font-semibold text-slate-200 mb-5">
                   {perf.class}
                 </h4>
                 <div className="space-y-3.5">
