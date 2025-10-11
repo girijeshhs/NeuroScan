@@ -1,18 +1,15 @@
-import { TrendingUp, Clock, Database, ArrowRight, Activity, FileText, BarChart3, CheckCircle2 } from 'lucide-react'
+import { TrendingUp, Clock, Database, ArrowRight, Activity, FileText, BarChart3, CheckCircle2, Trash2 } from 'lucide-react'
 
-const HomePage = ({ onGetStarted, onNavigate }) => {
+const HomePage = ({ onGetStarted, onNavigate, analysisHistory = [], onClearHistory }) => {
   const stats = [
     { label: 'Diagnostic Accuracy', value: '96.4%', icon: TrendingUp, color: 'border-forest', trend: '+2.3%' },
     { label: 'Average Analysis Time', value: '3.8s', icon: Clock, color: 'border-burgundy', trend: '-0.5s' },
-    { label: 'Scans Processed', value: '3,247', icon: Database, color: 'border-oxford', trend: '+127' },
+    { label: 'Scans Processed', value: analysisHistory.length.toString(), icon: Database, color: 'border-oxford', trend: `+${analysisHistory.length}` },
     { label: 'Model Confidence', value: '94.2%', icon: BarChart3, color: 'border-forest', trend: '+1.8%' },
   ]
 
-  const recentAnalyses = [
-    { id: 'MRI-2847', type: 'Glioma', confidence: '97.2%', date: '2 hours ago', status: 'complete' },
-    { id: 'MRI-2846', type: 'Meningioma', confidence: '95.8%', date: '5 hours ago', status: 'complete' },
-    { id: 'MRI-2845', type: 'No Tumor', confidence: '98.1%', date: '8 hours ago', status: 'complete' },
-  ]
+  // Use actual history or show empty state
+  const displayAnalyses = analysisHistory.slice(0, 5) // Show only last 5
 
   const features = [
     { title: 'VGG16 Architecture', desc: 'Deep convolutional neural network with 16 weighted layers', icon: Activity },
@@ -92,35 +89,54 @@ const HomePage = ({ onGetStarted, onNavigate }) => {
           <div className="lg:col-span-2 medical-card rounded-lg p-5">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-slate-200">Recent Analyses</h2>
-              <button className="text-sm text-burgundy hover:text-red-500 font-medium">View All</button>
+              <div className="flex items-center gap-2">
+                {analysisHistory.length > 0 && (
+                  <button 
+                    onClick={onClearHistory}
+                    className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-red-400 font-medium transition-colors px-3 py-1.5 rounded-md hover:bg-red-500/10"
+                    title="Clear all history"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Clear History
+                  </button>
+                )}
+              </div>
             </div>
             
-            <div className="data-table rounded-md overflow-hidden">
-              <table className="w-full">
-                <thead>
-                  <tr>
-                    <th className="text-left py-3 px-4">Scan ID</th>
-                    <th className="text-left py-3 px-4">Classification</th>
-                    <th className="text-left py-3 px-4">Confidence</th>
-                    <th className="text-left py-3 px-4">Timestamp</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentAnalyses.map((analysis) => (
-                    <tr key={analysis.id} className="cursor-pointer">
-                      <td className="py-3 px-4 text-slate-300 font-mono text-sm">{analysis.id}</td>
-                      <td className="py-3 px-4">
-                        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-burgundy/10 text-slate-300 text-xs font-medium">
-                          {analysis.type}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-slate-300 font-semibold">{analysis.confidence}</td>
-                      <td className="py-3 px-4 text-slate-500 text-sm">{analysis.date}</td>
+            {displayAnalyses.length > 0 ? (
+              <div className="data-table rounded-md overflow-hidden">
+                <table className="w-full">
+                  <thead>
+                    <tr>
+                      <th className="text-left py-3 px-4">Scan ID</th>
+                      <th className="text-left py-3 px-4">Classification</th>
+                      <th className="text-left py-3 px-4">Confidence</th>
+                      <th className="text-left py-3 px-4">Timestamp</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {displayAnalyses.map((analysis) => (
+                      <tr key={analysis.id}>
+                        <td className="py-3 px-4 text-slate-300 font-mono text-sm">{analysis.id}</td>
+                        <td className="py-3 px-4">
+                          <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-burgundy/10 text-slate-300 text-xs font-medium">
+                            {analysis.type}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-slate-300 font-semibold">{analysis.confidence}</td>
+                        <td className="py-3 px-4 text-slate-500 text-sm">{analysis.date}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Activity className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+                <p className="text-slate-400 text-sm">No analyses yet</p>
+                <p className="text-slate-500 text-xs mt-1">Upload an MRI scan to get started</p>
+              </div>
+            )}
           </div>
 
           {/* System Features */}

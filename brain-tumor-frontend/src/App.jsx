@@ -24,6 +24,7 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
+  const [analysisHistory, setAnalysisHistory] = useState([])
 
   const uploadSectionRef = useRef(null)
 
@@ -31,6 +32,16 @@ function App() {
     // Enable professional dark mode
     document.documentElement.classList.add('dark')
     document.body.classList.add('dark')
+    
+    // Load analysis history from localStorage
+    const savedHistory = localStorage.getItem('analysisHistory')
+    if (savedHistory) {
+      try {
+        setAnalysisHistory(JSON.parse(savedHistory))
+      } catch (e) {
+        console.error('Failed to parse history:', e)
+      }
+    }
   }, [])
 
   const handleFileSelect = (file) => {
@@ -73,6 +84,25 @@ function App() {
       })
 
       setResult(response.data)
+      
+      // Save to history
+      const newHistoryItem = {
+        id: `MRI-${Math.floor(1000 + Math.random() * 9000)}`,
+        type: response.data.prediction,
+        confidence: response.data.confidence,
+        timestamp: new Date().toISOString(),
+        date: new Date().toLocaleString('en-US', { 
+          month: 'short', 
+          day: 'numeric', 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        })
+      }
+      
+      const updatedHistory = [newHistoryItem, ...analysisHistory].slice(0, 20) // Keep last 20
+      setAnalysisHistory(updatedHistory)
+      localStorage.setItem('analysisHistory', JSON.stringify(updatedHistory))
+      
     } catch (err) {
       console.error('Prediction error:', err)
       setError(
@@ -103,10 +133,20 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const handleClearHistory = () => {
+    setAnalysisHistory([])
+    localStorage.removeItem('analysisHistory')
+  }
+
   const renderContent = () => {
     switch (activeSection) {
       case 'home':
-        return <HomePage onGetStarted={scrollToUpload} onNavigate={handleNavigate} />
+        return <HomePage 
+          onGetStarted={scrollToUpload} 
+          onNavigate={handleNavigate}
+          analysisHistory={analysisHistory}
+          onClearHistory={handleClearHistory}
+        />
       case 'tumors':
         return <TumorsPage />
       case 'model':
@@ -223,7 +263,12 @@ function App() {
           </>
         )
       default:
-        return <HomePage onGetStarted={scrollToUpload} onNavigate={handleNavigate} />
+        return <HomePage 
+          onGetStarted={scrollToUpload} 
+          onNavigate={handleNavigate}
+          analysisHistory={analysisHistory}
+          onClearHistory={handleClearHistory}
+        />
     }
   }
 
