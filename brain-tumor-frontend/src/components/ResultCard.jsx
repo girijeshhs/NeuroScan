@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { AlertCircle, CheckCircle, RefreshCw, Activity } from 'lucide-react'
+import { CheckCircle2, RefreshCw, Activity, Clock, FileText } from 'lucide-react'
 
 const ResultCard = ({ result, previewUrl, onReset }) => {
   const isTumor = result.is_tumor
@@ -9,135 +9,97 @@ const ResultCard = ({ result, previewUrl, onReset }) => {
   const allProbabilities = result.all_probabilities || {}
   const gradcamImage = result.gradcam_image
 
+  // Generate timestamp
+  const timestamp = new Date().toLocaleString('en-GB', { 
+    day: '2-digit', 
+    month: 'short', 
+    year: 'numeric',
+    hour: '2-digit', 
+    minute: '2-digit' 
+  })
+
+  // Generate scan ID
+  const scanId = `MRI-${Math.floor(1000 + Math.random() * 9000)}`
+
   return (
     <motion.div
       key="result"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.4 }}
-      className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden"
+      transition={{ duration: 0.3 }}
+      className="medical-card rounded-lg overflow-hidden"
     >
-      {/* Header */}
-      <div className={`p-6 ${isTumor ? 'bg-gradient-to-r from-red-500 to-pink-600' : 'bg-gradient-to-r from-green-500 to-emerald-600'}`}>
+      {/* Elegant Success Header */}
+      <div className="bg-[#1e2332] border-b border-[#2d5f4c]/30 px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {isTumor ? (
-              <AlertCircle className="w-8 h-8 text-white" />
-            ) : (
-              <CheckCircle className="w-8 h-8 text-white" />
-            )}
-            <div>
-              <h2 className="text-2xl font-bold text-white">Analysis Complete</h2>
-              <p className="text-white/90 text-sm">AI Diagnosis Result</p>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-[#4a6b5a]" />
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Completed</span>
             </div>
+            <div className="w-px h-4 bg-slate-700" />
+            <h2 className="text-lg font-semibold text-slate-200" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+              Diagnostic Analysis
+            </h2>
           </div>
           <motion.button
-            whileHover={{ scale: 1.05, rotate: 180 }}
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={onReset}
-            className="bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition-colors duration-300"
+            className="text-slate-400 hover:text-slate-200 p-2 rounded-md hover:bg-slate-800/50 transition-colors"
+            title="New Analysis"
           >
-            <RefreshCw className="w-5 h-5" />
+            <RefreshCw className="w-4 h-4" />
           </motion.button>
         </div>
       </div>
 
-      <div className="p-8 space-y-6">
-        {/* Main Result */}
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className={`p-6 rounded-2xl ${isTumor ? 'bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800' : 'bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800'}`}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Diagnosis</p>
-              <h3 className={`text-3xl font-bold ${isTumor ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
-                {prediction}
-              </h3>
-              {isTumor && tumorType && tumorType !== 'None' && (
-                <p className="text-lg font-semibold text-red-700 dark:text-red-300 mt-2">
-                  Type: {tumorType}
-                </p>
-              )}
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Confidence</p>
-              <p className="text-2xl font-bold text-gray-800 dark:text-gray-200">{confidence}</p>
-            </div>
+      <div className="p-6 space-y-6">
+        {/* Metadata Bar */}
+        <div className="flex items-center gap-6 text-xs text-slate-500">
+          <div className="flex items-center gap-2">
+            <FileText className="w-3.5 h-3.5" />
+            <span className="font-mono">{scanId}</span>
           </div>
+          <div className="flex items-center gap-2">
+            <Clock className="w-3.5 h-3.5" />
+            <span>{timestamp}</span>
+          </div>
+        </div>
+
+        {/* Tumor Classification - Simple Label Only */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="bg-[#1e2332] rounded-lg p-5 border border-slate-700/50"
+        >
+          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+            Tumor Classification
+          </p>
+          <p className="text-xl font-semibold text-slate-100" style={{ fontFamily: 'Cormorant Garamond, Georgia, serif' }}>
+            {isTumor && tumorType && tumorType !== 'None' ? tumorType : prediction}
+          </p>
         </motion.div>
 
-        {/* Probabilities */}
-        {Object.keys(allProbabilities).length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-6"
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <Activity className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-              <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                Detailed Analysis
-              </h4>
-            </div>
-            <div className="space-y-3">
-              {Object.entries(allProbabilities).map(([className, probability], index) => {
-                const percentage = (probability * 100).toFixed(2)
-                return (
-                  <motion.div
-                    key={className}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.4 + index * 0.1 }}
-                  >
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        {className}
-                      </span>
-                      <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                        {percentage}%
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${percentage}%` }}
-                        transition={{ duration: 0.8, delay: 0.5 + index * 0.1 }}
-                        className={`h-2.5 rounded-full ${
-                          className.includes('No Tumor')
-                            ? 'bg-green-500'
-                            : 'bg-gradient-to-r from-red-500 to-pink-500'
-                        }`}
-                      />
-                    </div>
-                  </motion.div>
-                )
-              })}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Images Grid */}
-        <div className="grid md:grid-cols-2 gap-6">
+        {/* MRI Visualizations - MOVED UP */}
+        <div className="grid md:grid-cols-2 gap-5">
           {/* Original Image */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5 }}
-            className="space-y-2"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="space-y-3"
           >
-            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
               Original MRI Scan
             </h4>
-            <div className="rounded-xl overflow-hidden border-2 border-gray-200 dark:border-gray-600">
+            <div className="rounded-lg overflow-hidden border border-slate-700/50 bg-[#1e2332]">
               <img
                 src={previewUrl}
                 alt="Original MRI"
-                className="w-full h-64 object-contain bg-gray-100 dark:bg-gray-700"
+                className="w-full h-64 object-contain bg-slate-900/50"
               />
             </div>
           </motion.div>
@@ -145,37 +107,98 @@ const ResultCard = ({ result, previewUrl, onReset }) => {
           {/* Grad-CAM Image */}
           {gradcamImage && isTumor && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6 }}
-              className="space-y-2"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+              className="space-y-3"
             >
-              <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                Grad-CAM Visualization
+              <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                Grad-CAM Heatmap
               </h4>
-              <div className="rounded-xl overflow-hidden border-2 border-red-200 dark:border-red-800">
+              <div className="rounded-lg overflow-hidden border border-slate-700/50 bg-[#1e2332]">
                 <img
                   src={`data:image/png;base64,${gradcamImage}`}
                   alt="Grad-CAM"
-                  className="w-full h-64 object-contain bg-gray-100 dark:bg-gray-700"
+                  className="w-full h-64 object-contain bg-slate-900/50"
                 />
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 italic">
-                Red/yellow areas indicate regions where the AI detected tumor tissue
+              <p className="text-xs text-slate-500 italic leading-relaxed">
+                Highlighted regions indicate areas of diagnostic significance identified by the neural network.
               </p>
             </motion.div>
           )}
         </div>
 
-        {/* Reset Button */}
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={onReset}
-          className="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-        >
-          Analyze Another Scan
-        </motion.button>
+        {/* Classification Probabilities - MOVED BELOW IMAGES */}
+        {Object.keys(allProbabilities).length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-[#1e2332] rounded-lg p-6 border border-slate-700/50"
+          >
+            <div className="flex items-center gap-2 mb-5">
+              <Activity className="w-4 h-4 text-slate-400" />
+              <h4 className="text-sm font-semibold text-slate-300 uppercase tracking-wider">
+                Classification Probabilities
+              </h4>
+            </div>
+            <div className="space-y-4">
+              {Object.entries(allProbabilities)
+                .sort(([, a], [, b]) => b - a)
+                .map(([className, probability], index) => {
+                  const percentage = (probability * 100).toFixed(1)
+                  const isHighest = index === 0
+                  const barColor = className.includes('No Tumor') 
+                    ? '#4a6b5a' 
+                    : isHighest 
+                      ? '#8b4a5c' 
+                      : '#4a4a5c'
+                  
+                  return (
+                    <motion.div
+                      key={className}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.35 + index * 0.05 }}
+                      className="group"
+                    >
+                      <div className="flex justify-between items-center mb-2">
+                        <span className={`text-sm font-medium ${isHighest ? 'text-slate-200' : 'text-slate-400'}`}>
+                          {className}
+                        </span>
+                        <span className={`text-sm font-semibold font-mono ${isHighest ? 'text-slate-100' : 'text-slate-400'}`}>
+                          {percentage}%
+                        </span>
+                      </div>
+                      <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${percentage}%` }}
+                          transition={{ duration: 0.6, delay: 0.4 + index * 0.05, ease: "easeOut" }}
+                          className="h-1.5 rounded-full transition-all duration-200 group-hover:opacity-80"
+                          style={{ backgroundColor: barColor }}
+                        />
+                      </div>
+                    </motion.div>
+                  )
+                })}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Action Button */}
+        <div className="pt-2">
+          <motion.button
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            onClick={onReset}
+            className="btn-secondary w-full py-3 rounded-md text-slate-200 font-semibold text-sm flex items-center justify-center gap-2"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Analyze New Scan
+          </motion.button>
+        </div>
       </div>
     </motion.div>
   )

@@ -48,40 +48,40 @@ const TumorsPage = () => {
 
   const colorClasses = {
     red: {
-      bg: 'bg-red-100 dark:bg-red-900/30',
-      border: 'border-red-200 dark:border-red-800',
-      text: 'text-red-600 dark:text-red-400',
-      icon: 'bg-red-500',
+      bg: 'bg-[#1e2332]',
+      border: 'border-[#8b4a5c]/50',
+      text: 'text-[#c97d8f]',
+      icon: 'bg-[#7c2d12]',
     },
     orange: {
-      bg: 'bg-orange-100 dark:bg-orange-900/30',
-      border: 'border-orange-200 dark:border-orange-800',
-      text: 'text-orange-600 dark:text-orange-400',
-      icon: 'bg-orange-500',
+      bg: 'bg-[#1e2332]',
+      border: 'border-[#6b2d3a]/50',
+      text: 'text-[#b87d8f]',
+      icon: 'bg-[#991b1b]',
     },
     purple: {
-      bg: 'bg-purple-100 dark:bg-purple-900/30',
-      border: 'border-purple-200 dark:border-purple-800',
-      text: 'text-purple-600 dark:text-purple-400',
-      icon: 'bg-purple-500',
+      bg: 'bg-[#1e2332]',
+      border: 'border-[#4a6b5a]/50',
+      text: 'text-[#7aa896]',
+      icon: 'bg-[#2d5f4c]',
     },
   }
 
   return (
-    <section className="relative min-h-screen pt-20 pb-16 bg-gray-50">
+    <section className="relative min-h-screen pt-20 pb-16 bg-[#0f1419]">
       <div className="max-w-[1400px] mx-auto px-8 sm:px-12">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-5 py-2 bg-red-600 rounded-full mb-6 shadow-lg">
-            <AlertCircle className="w-4 h-4 text-white" />
-            <span className="text-sm font-bold text-white uppercase tracking-wide">
-              Medical Reference Guide
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#1e2332] border border-[#7c2d12]/50 rounded-md mb-6">
+            <AlertCircle className="w-3.5 h-3.5 text-[#c97d8f]" />
+            <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              Clinical Reference
             </span>
           </div>
-          <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-6">
-            Brain Tumor Types
+          <h2 className="text-5xl md:text-6xl font-serif text-slate-100 mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            Tumor Classifications
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Our AI model detects and classifies three primary types of brain tumors with exceptional accuracy. Understanding each type is crucial for diagnosis and treatment.
+          <p className="text-lg text-slate-400 max-w-3xl mx-auto leading-relaxed">
+            VGG16 neural network trained to distinguish three primary brain tumor types with clinical-grade accuracy. Each classification requires distinct treatment protocols.
           </p>
         </div>
 
@@ -92,17 +92,17 @@ const TumorsPage = () => {
             return (
               <div
                 key={tumor.name}
-                className={`rounded-2xl border-2 ${colors.border} ${colors.bg} p-8 shadow-lg hover:shadow-2xl transition-shadow bg-white`}
+                className={`medical-card border ${colors.border} p-6 hover:border-opacity-100 transition-all`}
               >
-                <div className="flex items-start gap-4 mb-4">
-                  <div className={`${colors.icon} p-3 rounded-xl shadow-lg`}>
-                    <Icon className="w-6 h-6 text-white" />
+                <div className="flex items-start gap-3 mb-5">
+                  <div className={`${colors.icon} p-2.5 rounded-md`}>
+                    <Icon className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className={`text-2xl font-bold tracking-tight ${colors.text} mb-2`}>
+                    <h3 className={`text-xl font-serif ${colors.text} mb-2`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                       {tumor.name}
                     </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 font-normal leading-relaxed">
+                    <p className="text-sm text-slate-400 leading-relaxed">
                       {tumor.description}
                     </p>
                   </div>
@@ -110,34 +110,34 @@ const TumorsPage = () => {
 
                 <div className="space-y-4">
                   <div>
-                    <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 tracking-wide uppercase">
-                      Characteristics:
+                    <h4 className="text-xs font-semibold text-slate-500 mb-2.5 tracking-wider uppercase">
+                      Clinical Characteristics
                     </h4>
-                    <ul className="space-y-1.5">
+                    <ul className="space-y-2">
                       {tumor.characteristics.map((char, i) => (
                         <li
                           key={i}
-                          className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400"
+                          className="flex items-start gap-2 text-sm text-slate-300"
                         >
-                          <span className={`${colors.text} mt-1`}>•</span>
+                          <span className={`${colors.text} text-xs mt-0.5`}>•</span>
                           <span>{char}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
 
-                  <div className="pt-4 border-t border-gray-300 dark:border-gray-700 space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="font-medium text-gray-700 dark:text-gray-300">
-                        Prevalence:
+                  <div className="pt-4 border-t border-slate-700/50 space-y-2">
+                    <div className="flex justify-between text-xs">
+                      <span className="font-medium text-slate-400">
+                        Prevalence
                       </span>
                       <span className={`font-semibold ${colors.text}`}>
                         {tumor.prevalence}
                       </span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="font-medium text-gray-700 dark:text-gray-300">
-                        Survival Rate:
+                    <div className="flex justify-between text-xs">
+                      <span className="font-medium text-slate-400">
+                        Survival Prognosis
                       </span>
                       <span className={`font-semibold ${colors.text}`}>
                         {tumor.survival}
@@ -150,52 +150,51 @@ const TumorsPage = () => {
           })}
         </div>
 
-        {/* Additional Info Section */}
-        <div className="mt-20 bg-blue-50 rounded-2xl p-10 border-2 border-blue-200 shadow-lg">
-
-          <h3 className="text-3xl font-black text-gray-900 mb-6">
-            Early Detection Saves Lives
+        {/* Clinical Evidence Section */}
+        <div className="mt-16 medical-card border border-[#2d5f4c]/50 p-8">
+          <h3 className="text-3xl font-serif text-slate-100 mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            Clinical Validation
           </h3>
-          <div className="grid md:grid-cols-2 gap-8 text-gray-700">
+          <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h4 className="font-bold text-xl mb-4 text-indigo-600">Why Early Detection Matters:</h4>
-              <ul className="space-y-3 text-base">
+              <h4 className="text-lg font-semibold mb-4 text-[#7aa896]">Early Detection Benefits</h4>
+              <ul className="space-y-2.5 text-sm text-slate-300">
                 <li className="flex items-start gap-2">
-                  <span className="text-indigo-600 font-bold">•</span>
-                  <span>Increases treatment success rate by up to 90%</span>
+                  <span className="text-[#4a6b5a] text-xs mt-0.5">•</span>
+                  <span>Treatment success improves by up to 90% with early identification</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-indigo-600 font-bold">•</span>
-                  <span>Allows for less invasive surgical options</span>
+                  <span className="text-[#4a6b5a] text-xs mt-0.5">•</span>
+                  <span>Enables minimally invasive surgical interventions</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-indigo-600 font-bold">•</span>
-                  <span>Reduces long-term neurological damage</span>
+                  <span className="text-[#4a6b5a] text-xs mt-0.5">•</span>
+                  <span>Reduces risk of permanent neurological deficits</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-indigo-600 font-bold">•</span>
-                  <span>Improves quality of life outcomes</span>
+                  <span className="text-[#4a6b5a] text-xs mt-0.5">•</span>
+                  <span>Significantly improves patient quality of life metrics</span>
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="font-bold text-xl mb-4 text-indigo-600">Our AI Advantage:</h4>
-              <ul className="space-y-3 text-base">
+              <h4 className="text-lg font-semibold mb-4 text-[#7aa896]">System Performance</h4>
+              <ul className="space-y-2.5 text-sm text-slate-300">
                 <li className="flex items-start gap-2">
-                  <span className="text-indigo-600 font-bold">•</span>
-                  <span>96.4% accuracy across all tumor types</span>
+                  <span className="text-[#4a6b5a] text-xs mt-0.5">•</span>
+                  <span>96.4% classification accuracy across all tumor types</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-indigo-600 font-bold">•</span>
-                  <span>Instant analysis in under 4 seconds</span>
+                  <span className="text-[#4a6b5a] text-xs mt-0.5">•</span>
+                  <span>Analysis completed in under 4 seconds per scan</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-indigo-600 font-bold">•</span>
-                  <span>Grad-CAM visualization for transparency</span>
+                  <span className="text-[#4a6b5a] text-xs mt-0.5">•</span>
+                  <span>Grad-CAM visualization for diagnostic transparency</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-indigo-600 font-bold">•</span>
-                  <span>Supports radiologist decision-making</span>
+                  <span className="text-[#4a6b5a] text-xs mt-0.5">•</span>
+                  <span>Clinical decision support for radiological assessment</span>
                 </li>
               </ul>
             </div>
