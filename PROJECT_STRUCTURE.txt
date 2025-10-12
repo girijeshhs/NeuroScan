@@ -1,0 +1,87 @@
+🧠 Brain Tumor Detection - Project Structure
+═══════════════════════════════════════════════════════════
+
+📁 ann-brain-tumor/
+│
+├── 📂 backend/                          [Flask Backend - Python]
+│   ├── 🐍 app.py                       ← Main Flask server (START HERE!)
+│   ├── 📋 requirements.txt             ← Install: pip install -r requirements.txt
+│   ├── 🔧 start.sh                     ← Backend quick start
+│   │
+│   ├── 🧪 Test Scripts:
+│   ├── test_model.py                   ← Test model loading & config
+│   ├── test_which_preprocessing.py     ← Determine correct preprocessing
+│   ├── test_gradcam_xception.py        ← Test Grad-CAM visualization
+│   ├── test_xception_config.py         ← Test Xception configuration
+│   ├── debug_gradcam.py                ← Debug Grad-CAM issues
+│   ├── inspect_model.py                ← Inspect model architecture
+│   ├── FIND_CLASS_ORDER.py             ← Find correct class label order
+│   └── test_gradcam.html               ← Simple HTML test page
+│
+├── 📂 frontend/                         [React Frontend - Node.js]
+│   ├── 📂 src/                         ← React source code
+│   │   ├── 📂 components/              ← React components
+│   │   │   ├── HomePage.jsx            ← Landing page
+│   │   │   ├── Navbar.jsx              ← Navigation bar
+│   │   │   ├── TumorsPage.jsx          ← Tumor information
+│   │   │   ├── ModelPage.jsx           ← Model details
+│   │   │   ├── UploadBox.jsx           ← Image upload
+│   │   │   ├── ResultCard.jsx          ← Results display
+│   │   │   ├── LoadingSpinner.jsx      ← Loading animation
+│   │   │   ├── ErrorToast.jsx          ← Error messages
+│   │   │   ├── FeatureSection.jsx      ← Features showcase
+│   │   │   └── SiteFooter.jsx          ← Footer
+│   │   ├── App.jsx                     ← Main app component
+│   │   ├── main.jsx                    ← Entry point
+│   │   └── index.css                   ← Global styles
+│   │
+│   ├── 📂 public/                      ← Static assets
+│   ├── 📋 package.json                 ← Install: npm install
+│   ├── index.html                      ← HTML template
+│   └── vite.config.js                  ← Vite configuration
+│
+├── 📂 docs/                             [Documentation]
+│   ├── 📖 QUICK_FIX_GUIDE.md           ← Quick troubleshooting (START HERE!)
+│   ├── 📖 XCEPTION_FIX_APPLIED.md      ← Latest Grad-CAM fixes
+│   ├── 📖 XCEPTION_GRADCAM_FIX.md      ← Comprehensive fix guide
+│   ├── 📖 GRADCAM_FIX_SUMMARY.md       ← Summary of all fixes
+│   ├── 📖 FINAL_CONFIGURATION.md       ← Working configuration
+│   ├── 📖 SETUP_GUIDE.md               ← Setup instructions
+│   ├── 📖 MODEL_CONFIG.md              ← Model configuration
+│   ├── 📖 NO_TUMOR_NO_GRADCAM.md       ← No tumor handling
+│   ├── 📖 GRADCAM_FIX.md               ← Grad-CAM fixes
+│   ├── 📖 ERROR_FIXED.md               ← Error resolution log
+│   ├── 📖 CHANGES.md                   ← Change log
+│   ├── 📖 URGENT_FIX.md                ← Critical fixes
+│   └── 📖 README_old.md                ← Original README
+│
+├── 📄 README.md                         [Main Documentation]
+├── 🚀 start_all.sh                      [Quick Start Script - USE THIS!]
+├── 📋 REORGANIZATION_COMPLETE.md        [Reorganization summary]
+└── 📂 .git/                             [Version Control]
+
+═══════════════════════════════════════════════════════════
+
+🚀 QUICK START:
+
+   1. Start everything:
+      ./start_all.sh
+
+   2. Or manually:
+      Terminal 1: cd backend && python3 app.py
+      Terminal 2: cd frontend && npm run dev
+
+   3. Access:
+      Backend:  http://127.0.0.1:5000
+      Frontend: http://localhost:5173
+
+═══════════════════════════════════════════════════════════
+
+📖 KEY FILES:
+
+   Backend:      backend/app.py
+   Frontend:     frontend/src/App.jsx
+   Quick Guide:  docs/QUICK_FIX_GUIDE.md
+   Start Script: ./start_all.sh
+
+═══════════════════════════════════════════════════════════
