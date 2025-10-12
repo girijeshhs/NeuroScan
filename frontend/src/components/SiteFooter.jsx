@@ -6,7 +6,7 @@ const SiteFooter = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="text-center md:text-left">
           <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-            Developed by Girijesh S
+            Made by using Xception
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400">
             Powered by TensorFlow · Flask · React · Tailwind CSS
@@ -24,7 +24,7 @@ const SiteFooter = () => {
             <Github className="w-5 h-5" />
           </a>
           <a
-            href="https://www.linkedin.com/in/girijeshs"
+            href="https://www.linkedin.com/in/girijeshhs"
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 rounded-full border border-transparent hover:border-blue-500/60 hover:text-blue-600 dark:hover:text-blue-400 transition"
@@ -33,7 +33,7 @@ const SiteFooter = () => {
             <Linkedin className="w-5 h-5" />
           </a>
           <a
-            href="mailto:girijeshs@example.com"
+            href="mailto:girijeshhs@example.com"
             className="p-2 rounded-full border border-transparent hover:border-blue-500/60 hover:text-blue-600 dark:hover:text-blue-400 transition"
             aria-label="Email"
           >
