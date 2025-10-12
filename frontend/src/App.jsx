@@ -177,7 +177,7 @@ function App() {
                           </div>
                           <div className="flex items-center gap-2 rounded-md bg-burgundy/10 border border-burgundy/20 px-3 py-1.5 text-xs font-semibold text-slate-300 w-fit tracking-wide uppercase">
                             <span className="inline-flex h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-                            VGG16 Neural Network Active
+                            Xception Neural Network Active
                           </div>
                         </div>
 

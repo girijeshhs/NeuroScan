@@ -107,7 +107,7 @@ const HeroSection = ({ darkMode, onToggleTheme, onGetStarted, typewriterText }) 
               </div>
               <div className="absolute -right-6 top-1/2 -translate-y-1/2 px-4 py-3 rounded-2xl bg-white dark:bg-gray-900 shadow-md border border-gray-200 dark:border-gray-800">
                 <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">96% Accuracy</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">VGG16 fine-tuned model</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Xception fine-tuned model</p>
               </div>
             </div>
           </motion.div>

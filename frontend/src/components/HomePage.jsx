@@ -12,7 +12,7 @@ const HomePage = ({ onGetStarted, onNavigate, analysisHistory = [], onClearHisto
   const displayAnalyses = analysisHistory.slice(0, 5) // Show only last 5
 
   const features = [
-    { title: 'VGG16 Architecture', desc: 'Deep convolutional neural network with 16 weighted layers', icon: Activity },
+    { title: 'Xception Architecture', desc: 'Advanced depthwise separable convolution network with 36 parameter-efficient blocks', icon: Activity },
     { title: 'Grad-CAM Visualization', desc: 'Explainable AI highlighting critical diagnostic regions', icon: FileText },
     { title: 'Clinical Validation', desc: 'Validated against peer-reviewed medical datasets', icon: CheckCircle2 },
   ]
@@ -32,7 +32,7 @@ const HomePage = ({ onGetStarted, onNavigate, analysisHistory = [], onClearHisto
               </h1>
               
               <p className="text-base text-slate-400 mb-6 max-w-2xl leading-relaxed">
-                Advanced deep learning platform employing VGG16 convolutional architecture for rapid, accurate identification 
+                Advanced deep learning platform employing Xception convolutional architecture for rapid, accurate identification 
                 of glioma, meningioma, and pituitary tumors in MRI scans. Validated diagnostic support with explainable AI visualization.
               </p>
 

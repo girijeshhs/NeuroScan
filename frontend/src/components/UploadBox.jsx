@@ -92,7 +92,7 @@ const UploadBox = ({ onFileSelect, selectedFile, previewUrl, loading }) => {
                     <ImageIcon className="w-4 h-4" />
                     <span className="font-medium truncate">{selectedFile?.name}</span>
                   </div>
-                  <p className="text-xs text-slate-500 mt-1">Normalized to 224×224px for VGG16 input</p>
+                  <p className="text-xs text-slate-500 mt-1">Normalized to 299×299px for Xception input</p>
                 </div>
 
                 {loading && (

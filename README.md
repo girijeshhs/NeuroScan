@@ -10,8 +10,6 @@
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-- 🧠 Brain tumor detection using a pre-trained VGG16 CNN model
-
 Advanced deep learning system for brain tumor detection and classification using Xception CNN architecture with explainable AI (Grad-CAM) visualization.- 🏥 **Specific tumor type classification**: Glioma, Meningioma, Pituitary
 
 - 🔍 Grad-CAM (Gradient-weighted Class Activation Mapping) visualization
@@ -216,9 +214,12 @@ python3 test_gradcam_xception.py path/to/mri_image.jpgYou should see:
 
 Model loaded successfully
 
-### Test FrontendModel input shape: (None, 224, 224, 3)
+Model input shape: (None, 299, 299, 3)
+Model output shape: (None, 4)
 
-```bashModel output shape: (None, 4)
+### Test Frontend
+
+```bash
 
 cd frontend```
 
@@ -424,15 +425,19 @@ const [darkMode] = useState(true)  // Dark mode enabled    "predicted_class": 0,
 
 - **HTTP Client**: Axios{
 
-- **Icons**: Lucide React    "input_shape": "(None, 224, 224, 3)",
+- **Icons**: Lucide React
+- **Animations**: Framer Motion
 
-- **Animations**: Framer Motion    "output_shape": "(None, 2)",
+---
 
-    "total_layers": 23,
-
----    "conv_layers": ["block1_conv1", "block1_conv2", ...],
-
-    "last_conv_layer": "block5_conv3"
+**Response:**
+```json
+{
+    "input_shape": "(None, 299, 299, 3)",
+    "output_shape": "(None, 4)",
+    "total_layers": 136,
+    "conv_layers": ["block1_conv1", "block1_conv2", ...],
+    "last_conv_layer": "block14_sepconv2_act"
 
 ## 📊 API Reference}
 

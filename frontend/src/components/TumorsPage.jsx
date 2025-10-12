@@ -74,8 +74,8 @@ const TumorsPage = () => {
           <h2 className="text-5xl md:text-6xl font-bold text-slate-100 mb-6">
             Tumor Classifications
           </h2>
-          <p className="text-lg text-slate-400 max-w-3xl mx-auto leading-relaxed">
-            VGG16 neural network trained to distinguish three primary brain tumor types with clinical-grade accuracy. Each classification requires distinct treatment protocols.
+          <p className="text-base text-slate-400 max-w-3xl mx-auto leading-relaxed">
+            Xception neural network trained to distinguish three primary brain tumor types with clinical-grade accuracy. Each classification requires distinct treatment protocols.
           </p>
         </div>
 

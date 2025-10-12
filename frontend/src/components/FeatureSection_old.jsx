@@ -4,7 +4,7 @@ const features = [
   {
     icon: Brain,
     title: 'AI-Powered Analysis',
-    description: 'VGG16-based convolutional neural network trained on curated MRI datasets for reliable tumor detection.',
+    description: 'Xception-based convolutional neural network trained on curated MRI datasets for reliable tumor detection.',
     color: 'from-blue-500 to-cyan-500',
   },
   {

@@ -35,9 +35,9 @@ const ModelPage = () => {
   ]
 
   const keySpecs = [
-    { label: 'Model Architecture', value: 'VGG16 Transfer Learning' },
-    { label: 'Inference Time', value: '<4 seconds' },
-    { label: 'Overall Accuracy', value: '99.6%' },
+
+    { label: 'Model Architecture', value: 'Xception Transfer Learning' },
+    { label: 'Training Dataset', value: '7,023 MRI Scans' },
   ]
 
   const performance = [
@@ -53,7 +53,7 @@ const ModelPage = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-5xl font-bold text-slate-100 mb-4">
-            VGG16 Neural Network
+            Xception Neural Network
           </h2>
           <p className="text-base text-slate-400 max-w-2xl mx-auto leading-relaxed">
             Transfer learning architecture fine-tuned for brain tumor classification with explainable AI visualization
@@ -88,26 +88,26 @@ const ModelPage = () => {
               </a>
             </div>
 
-            {/* Why VGG16 Section */}
+            {/* Why Xception Section */}
             <div className="medical-card p-6">
               <h3 className="text-xl font-semibold text-slate-200 mb-4">
-                Why VGG16 Neural Network?
+                Why Xception Neural Network?
               </h3>
               <div className="space-y-4 text-[15px] text-slate-300 leading-relaxed">
                 <p>
-                  VGG16 was selected for its proven effectiveness in medical imaging classification through transfer learning. 
-                  Pre-trained on ImageNet's 1.4 million images, the model brings robust feature extraction capabilities that 
-                  significantly reduce training time while maintaining high accuracy on our specialized brain tumor dataset.
+                  Xception was selected for its exceptional performance in medical imaging classification through transfer learning. 
+                  Pre-trained on ImageNet's 1.4 million images, the model brings advanced depthwise separable convolution capabilities that 
+                  provide better parameter efficiency and superior feature extraction while maintaining high accuracy on our specialized brain tumor dataset.
                 </p>
                 <p>
-                  The architecture's uniform 3×3 convolutional layers create hierarchical feature representations ideal for 
-                  identifying subtle patterns in MRI scans. This deep structure enables the network to learn increasingly 
+                  The architecture's depthwise separable convolutions create highly efficient feature representations ideal for 
+                  identifying subtle patterns in MRI scans. With 36 convolutional blocks, this deep structure enables the network to learn increasingly 
                   abstract tumor characteristics—from basic edges and textures in early layers to complex pathological 
-                  features in deeper layers.
+                  features in deeper layers—all while using fewer parameters than traditional CNNs.
                 </p>
                 <p>
-                  Clinical validation requires explainability. VGG16's straightforward architecture facilitates Grad-CAM 
-                  visualization, highlighting the exact regions influencing classification decisions. This transparency 
+                  Clinical validation requires explainability. Xception's modular architecture facilitates Grad-CAM 
+                  visualization through its activation layers, highlighting the exact regions influencing classification decisions. This transparency 
                   allows radiologists to verify the model's reasoning, ensuring diagnoses align with established clinical 
                   criteria and building trust in AI-assisted workflows.
                 </p>
