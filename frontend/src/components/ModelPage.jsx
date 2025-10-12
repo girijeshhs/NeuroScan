@@ -75,7 +75,7 @@ const ModelPage = () => {
                 View complete training notebook and implementation details
               </p>
               <a
-                href="https://colab.research.google.com/drive/1RTGzaVTu872MxNpOrRDVYHq7LXA9JxLz?usp=sharing"
+                href="https://colab.research.google.com/drive/1gV5ulswcm5aEEOC5j5tA890DHuIbVjVZ?usp=sharing"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-3 w-full bg-gradient-to-r from-[#4a6b5a] to-[#2d5f4c] hover:from-[#5a7b6a] hover:to-[#3d6f5c] text-white font-medium py-3.5 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
