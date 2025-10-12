@@ -2,6 +2,7 @@ import os
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
+from tensorflow.keras.applications.xception import preprocess_input as xception_preprocess
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import cv2
@@ -34,211 +35,230 @@ CLASS_LABELS = {
 
 def preprocess_image(image, target_size=(299, 299)):
     """
-    Preprocess the uploaded image for Xception model prediction.
-    ✅ Matches the preprocessing used during training on 7k dataset.
+    Preprocess the uploaded MRI image for Xception model using official Xception preprocessing.
+    
+    ✅ Uses tf.keras.applications.xception.preprocess_input which:
+    - Scales pixel values from [0, 255] to [-1, 1] range
+    - This is the CORRECT preprocessing for pretrained Xception models
+    
+    This function:
+    1. Converts grayscale MRI images to RGB (Xception expects 3 channels)
+    2. Resizes to 299x299 (Xception's input size)
+    3. Applies Xception-specific preprocessing (scales to [-1, 1])
+    4. Adds batch dimension for model input
+    
+    Args:
+        image: PIL Image object (uploaded MRI scan)
+        target_size: Tuple (height, width) - should be (299, 299) for Xception
+    
+    Returns:
+        img_array: Numpy array of shape (1, 299, 299, 3) with values in [-1, 1]
     """
-    # Convert to RGB if needed (handles grayscale MRI images)
+    # Step 1: Convert grayscale MRI images to RGB
+    # Many MRI scans are grayscale, but Xception requires 3 channels
     if image.mode != 'RGB':
         image = image.convert('RGB')
+        print(f"✓ Converted to RGB")
     
-    # Resize to model input size
+    # Step 2: Resize to Xception's expected input size (299x299)
     image = image.resize(target_size)
+    print(f"✓ Resized to {target_size}")
     
-    # Convert to numpy array
-    img_array = np.array(image)
+    # Step 3: Convert PIL Image to numpy array (values in [0, 255])
+    img_array = np.array(image, dtype=np.float32)
     
-    # If grayscale somehow still present, convert to RGB
-    if img_array.shape[-1] == 1:
+    # Safety check: ensure we have 3 channels
+    if len(img_array.shape) == 2:  # Grayscale (H, W)
+        img_array = np.stack((img_array,)*3, axis=-1)  # Convert to (H, W, 3)
+        print(f"✓ Converted grayscale to RGB")
+    elif img_array.shape[-1] == 1:  # (H, W, 1)
         img_array = np.stack((img_array,)*3, axis=-1)
+        print(f"✓ Converted single-channel to RGB")
     
-    # ✅ [0, 1] normalization - matches training preprocessing
-    img_array = img_array.astype('float32') / 255.0
+    # Step 4: Add batch dimension first (required by preprocess_input)
+    img_array = np.expand_dims(img_array, axis=0)  # (H, W, 3) -> (1, H, W, 3)
     
-    # Add batch dimension
-    img_array = np.expand_dims(img_array, axis=0)
+    # Step 5: Apply Xception-specific preprocessing
+    # ✅ This scales from [0, 255] to [-1, 1] range - CORRECT for Xception!
+    img_array = xception_preprocess(img_array)
     
-    print(f"✅ Preprocessed: Shape={img_array.shape}, Range=[{img_array.min():.3f}, {img_array.max():.3f}]")
+    print(f"✅ Xception preprocessing complete - Shape: {img_array.shape}, Range: [{img_array.min():.3f}, {img_array.max():.3f}]")
     
     return img_array
 
 def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
     """
-    Generate Grad-CAM heatmap for the given image and model.
-    Enhanced version with better gradient computation and robust error handling.
+    Generate clean Grad-CAM heatmap for Xception model.
+    
+    This function computes class activation maps by:
+    1. Getting activations from the last convolutional layer (block14_sepconv2_act)
+    2. Computing gradients of predicted class w.r.t. those activations
+    3. Weighting activations by gradient importance
+    4. Producing a focused heatmap showing which regions influenced the prediction
+    
+    Args:
+        img_array: Preprocessed image array (1, 299, 299, 3) with Xception preprocessing [-1, 1]
+        model: Trained Keras model
+        last_conv_layer_name: Name of the last convolutional layer (should be 'block14_sepconv2_act')
+        pred_index: Class index to visualize (uses argmax if None)
+    
+    Returns:
+        heatmap_np: Clean numpy array of shape (H, W) with values in [0, 1]
     """
-    # Create a model that maps the input image to the activations of the last conv layer
-    # and the output predictions
+    # Get the target convolutional layer
     try:
         last_conv_layer = model.get_layer(last_conv_layer_name)
+        print(f"✓ Using Grad-CAM layer: {last_conv_layer_name}")
     except ValueError:
-        print(f"Layer '{last_conv_layer_name}' not found in model")
-        available_layers = [layer.name for layer in model.layers]
-        print(f"Available layers: {available_layers}")
+        print(f"❌ Layer '{last_conv_layer_name}' not found in model")
         raise
     
-    # Handle both single and multiple inputs/outputs
+    # Create gradient model
     model_inputs = model.input
     if isinstance(model_inputs, list):
         model_inputs = model_inputs[0] if len(model_inputs) == 1 else model_inputs
     
     model_outputs = model.output
     if isinstance(model_outputs, list):
-        print(f"Model has multiple outputs: {len(model_outputs)}")
-        model_outputs = model_outputs[-1]  # Use last output if multiple
-        print(f"Using output: {model_outputs}")
+        model_outputs = model_outputs[-1]
     
     grad_model = keras.models.Model(
         inputs=model_inputs,
         outputs=[last_conv_layer.output, model_outputs]
     )
     
-    print(f"Grad model created - Input: {grad_model.input_shape}, Outputs: {[o.shape for o in grad_model.outputs]}")
-    
-    # Compute the gradient of the top predicted class for our input image
-    # with respect to the activations of the last conv layer
+    # Compute gradients
     with tf.GradientTape() as tape:
-        last_conv_layer_output, preds = grad_model(img_array)
+        conv_outputs, preds = grad_model(img_array)
         
-        # Ensure preds is a tensor, not a list
         if isinstance(preds, list):
             preds = preds[0] if len(preds) == 1 else preds[-1]
         
+        # Get predicted class index
         if pred_index is None:
             pred_index = tf.argmax(preds[0])
         
-        # Ensure pred_index is an integer
-        if isinstance(pred_index, (np.integer, int)):
-            pred_index = int(pred_index)
-        else:
-            pred_index = int(pred_index.numpy())
+        pred_index = int(pred_index.numpy() if hasattr(pred_index, 'numpy') else pred_index)
+        print(f"✓ Generating Grad-CAM for class {pred_index}")
         
+        # Get class score
         class_channel = preds[:, pred_index]
     
-    # Gradient of the output neuron with regard to the output feature map of the last conv layer
-    grads = tape.gradient(class_channel, last_conv_layer_output)
+    # Compute gradients of class score w.r.t. feature maps
+    grads = tape.gradient(class_channel, conv_outputs)
     
-    # Check if gradients are valid
     if grads is None:
-        print("Warning: Gradients are None, cannot generate Grad-CAM")
         raise ValueError("Gradient computation failed")
     
-    # Vector of mean intensity of the gradient over a specific feature map channel
+    # Global average pooling of gradients (importance weights)
     pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
     
-    # Multiply each channel in the feature map array by "how important this channel is"
-    last_conv_layer_output = last_conv_layer_output[0]
-    heatmap = last_conv_layer_output @ pooled_grads[..., tf.newaxis]
+    # Weight each feature map by its importance
+    conv_outputs = conv_outputs[0]
+    heatmap = conv_outputs @ pooled_grads[..., tf.newaxis]
     heatmap = tf.squeeze(heatmap)
     
-    # Normalize the heatmap between 0 & 1 for visualization
+    # Apply ReLU (only positive contributions)
     heatmap = tf.maximum(heatmap, 0)
-    max_val = tf.math.reduce_max(heatmap)
     
-    if max_val > 0:
-        heatmap = heatmap / max_val
+    # Normalize to [0, 1] - NO additional scaling or distortion
+    heatmap = heatmap / (tf.math.reduce_max(heatmap) + 1e-10)
     
     heatmap_np = heatmap.numpy()
     
-    # ✅ Improved normalization to avoid "all-over" heatmaps
-    heatmap_np = heatmap_np / (np.max(heatmap_np) + 1e-10)
-    
-    print(f"✅ Heatmap generated - Shape: {heatmap_np.shape}, Range: [{heatmap_np.min():.3f}, {heatmap_np.max():.3f}]")
+    print(f"✅ Clean heatmap generated - Shape: {heatmap_np.shape}, Range: [{heatmap_np.min():.3f}, {heatmap_np.max():.3f}]")
     
     return heatmap_np
 
-def create_gradcam_overlay(original_image, heatmap, alpha=0.4):
+def create_gradcam_overlay(original_image, heatmap, alpha=0.5):
     """
-    Create an overlay of the Grad-CAM heatmap on the original image.
-    ✅ Optimized for clear, focused visualization.
+    Create clean, focused Grad-CAM overlay on the original MRI image.
+    
+    This function:
+    1. Resizes heatmap to match original image
+    2. Applies JET colormap (red=tumor region focus, blue=background)
+    3. Blends with original image for clear visualization
+    
+    Args:
+        original_image: PIL Image object (original MRI scan)
+        heatmap: Clean numpy array (H, W) with values in [0, 1]
+        alpha: Blending factor (0.5 = balanced visibility)
+    
+    Returns:
+        superimposed_img: Numpy array (H, W, 3) with clean overlay
     """
-    # Resize heatmap to match original image size
+    # Resize heatmap to match image dimensions
     heatmap_resized = cv2.resize(heatmap, (original_image.width, original_image.height))
     
-    # Ensure non-negative values
-    heatmap_resized = np.maximum(heatmap_resized, 0)
+    # Ensure proper range [0, 1] - NO extra normalization to avoid distortion
+    heatmap_resized = np.clip(heatmap_resized, 0, 1)
     
-    # Normalize to [0, 1]
-    if heatmap_resized.max() > 0:
-        heatmap_resized = heatmap_resized / heatmap_resized.max()
+    print(f"✓ Heatmap resized - Range: [{heatmap_resized.min():.3f}, {heatmap_resized.max():.3f}]")
     
-    print(f"✅ Heatmap resized - Min: {heatmap_resized.min():.4f}, Max: {heatmap_resized.max():.4f}")
+    # Convert to 8-bit for colormap
+    heatmap_uint8 = np.uint8(255 * heatmap_resized)
     
-    # Convert to RGB colormap (JET colormap: red=high, blue=low)
-    heatmap_colored = np.uint8(255 * heatmap_resized)
-    heatmap_colored = cv2.applyColorMap(heatmap_colored, cv2.COLORMAP_JET)
+    # Apply JET colormap (red=high importance for tumor detection)
+    heatmap_colored = cv2.applyColorMap(heatmap_uint8, cv2.COLORMAP_JET)
     
-    print(f"DEBUG: Heatmap colored - Shape: {heatmap_colored.shape}, Range: {heatmap_colored.min()} to {heatmap_colored.max()}")
-    
-    # Convert PIL image to numpy array
+    # Prepare original image
     img_array = np.array(original_image)
     
-    # Ensure image is in RGB format
-    if len(img_array.shape) == 2:  # Grayscale
+    # Handle grayscale MRI
+    if len(img_array.shape) == 2:
         img_array = cv2.cvtColor(img_array, cv2.COLOR_GRAY2RGB)
     
-    # Convert RGB to BGR for OpenCV
+    # Convert to BGR for OpenCV
     img_bgr = cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR)
     
-    print(f"DEBUG: Original image - Shape: {img_bgr.shape}, Range: {img_bgr.min()} to {img_bgr.max()}")
-    
-    # AGGRESSIVE overlay with higher alpha for maximum visibility
+    # Clean blend: 50% original + 50% heatmap
     superimposed_img = cv2.addWeighted(img_bgr, 1 - alpha, heatmap_colored, alpha, 0)
     
-    print(f"DEBUG: Superimposed - Shape: {superimposed_img.shape}, Range: {superimposed_img.min()} to {superimposed_img.max()}")
-    
-    # Convert back to RGB for final output
+    # Convert back to RGB
     superimposed_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
     
-    print(f"✅ Grad-CAM overlay created - Alpha: {alpha}, Heatmap range: {heatmap_resized.min():.3f} to {heatmap_resized.max():.3f}")
+    print(f"✅ Clean overlay created - {int((1-alpha)*100)}% original + {int(alpha*100)}% heatmap")
     
     return superimposed_img
 
 def get_last_conv_layer_name(model):
     """
-    Find the last convolutional layer for Grad-CAM.
-    ✅ Optimized for Xception architecture.
+    Get the correct convolutional layer for Xception Grad-CAM.
+    
+    For Xception, the optimal layer is 'block14_sepconv2_act' - the final
+    convolutional activation that provides the best tumor localization.
+    
+    Args:
+        model: Trained Keras Xception model
+    
+    Returns:
+        layer_name: 'block14_sepconv2_act' for Xception
     """
-    # ✅ For Xception, use the activation layer after block14_sepconv2
-    # This gives better Grad-CAM results than the raw conv layer
+    # Xception's optimal Grad-CAM layer
     XCEPTION_LAYER = "block14_sepconv2_act"
     
-    # Try Xception layer first
+    print(f"🎯 Using Xception Grad-CAM layer: {XCEPTION_LAYER}")
+    
+    # Verify the layer exists
     try:
         model.get_layer(XCEPTION_LAYER)
-        print(f"✅ Using Xception Grad-CAM layer: {XCEPTION_LAYER}")
+        print(f"✅ Layer '{XCEPTION_LAYER}' found in model")
         return XCEPTION_LAYER
     except:
-        print(f"⚠️  {XCEPTION_LAYER} not found, searching for alternatives...")
-    
-    # Fallback: Find last conv/separable conv layer
-    conv_layers = []
-    for layer in model.layers:
-        # Check for Conv2D or SeparableConv2D layers
-        if isinstance(layer, (keras.layers.Conv2D, keras.layers.SeparableConv2D)):
-            conv_layers.append(layer.name)
-        # Also check for Activation layers (Xception uses separate activation layers)
-        elif isinstance(layer, keras.layers.Activation) and 'conv' in layer.name.lower():
-            conv_layers.append(layer.name)
-    
-    if not conv_layers:
-        # Check nested models (Functional API)
-        print("Searching nested models...")
+        print(f"⚠️  Warning: '{XCEPTION_LAYER}' not found, searching for alternatives...")
+        
+        # Fallback search
         for layer in model.layers:
-            if hasattr(layer, 'layers'):
-                for sublayer in layer.layers:
-                    if isinstance(sublayer, (keras.layers.Conv2D, keras.layers.SeparableConv2D)):
-                        conv_layers.append(sublayer.name)
-    
-    if not conv_layers:
-        print("❌ No convolutional layers found!")
-        print("Available layers:")
-        for layer in model.layers[:10]:  # Show first 10
-            print(f"  - {layer.name}: {layer.__class__.__name__}")
-        raise ValueError("No convolutional layer found in the model")
-    
-    last_conv = conv_layers[-1]
-    print(f"✅ Found {len(conv_layers)} conv layers. Using: {last_conv}")
-    return last_conv
+            if isinstance(layer, (keras.layers.SeparableConv2D, keras.layers.Conv2D)):
+                last_conv = layer.name
+            elif isinstance(layer, keras.layers.Activation) and 'block14' in layer.name:
+                return layer.name
+        
+        if last_conv:
+            print(f"✅ Using fallback layer: {last_conv}")
+            return last_conv
+        
+        raise ValueError("No suitable convolutional layer found for Grad-CAM")
 
 def image_to_base64(img_array):
     """
@@ -277,18 +297,34 @@ def predict():
         img_array = preprocess_image(image)
         
         # Make prediction
-        predictions = model.predict(img_array)
+        print("\n" + "="*60)
+        print("🧠 MAKING PREDICTION")
+        print("="*60)
+        
+        predictions = model.predict(img_array, verbose=0)
         predicted_class = int(np.argmax(predictions[0]))
         confidence = float(predictions[0][predicted_class])
         
         # Get prediction label
         prediction_label = CLASS_LABELS.get(predicted_class, f"Class {predicted_class}")
         
+        # Print clear prediction results
+        print(f"\n✅ PREDICTION RESULTS:")
+        print(f"   Predicted: {prediction_label}")
+        print(f"   Class Index: {predicted_class}")
+        print(f"   Confidence: {confidence * 100:.2f}%")
+        print(f"\n   All Class Probabilities:")
+        
         # Get all class probabilities for detailed response
         all_probabilities = {}
         for class_idx, class_name in CLASS_LABELS.items():
             if class_idx < len(predictions[0]):
-                all_probabilities[class_name] = float(predictions[0][class_idx])
+                prob = float(predictions[0][class_idx])
+                all_probabilities[class_name] = prob
+                bar = "█" * int(prob * 40)
+                print(f"   {class_idx}. {class_name:20s} {prob*100:5.2f}% {bar}")
+        
+        print("="*60 + "\n")
         
         # Determine if tumor is present
         is_tumor = "No Tumor" not in prediction_label
