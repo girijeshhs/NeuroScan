@@ -1,0 +1,79 @@
+<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+    <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+        </marker>
+    </defs>
+
+    <style>
+        .box { fill: #f0f4f8; stroke: #6c757d; stroke-width: 1.5; rx: 8; }
+        .title { font-size: 16px; font-weight: bold; text-anchor: middle; }
+        .label { font-size: 12px; text-anchor: middle; }
+        .arrow-line { stroke: #333; stroke-width: 2; marker-end: url(#arrow); }
+        .flow-label { font-size: 11px; font-style: italic; fill: #555; }
+    </style>
+
+    <!-- Main Containers -->
+    <rect x="20" y="50" width="260" height="400" class="box" />
+    <text x="150" y="80" class="title">Client-Side</text>
+    <text x="150" y="100" class="label">(User's Browser)</text>
+
+    <rect x="520" y="50" width="260" height="400" class="box" />
+    <text x="650" y="80" class="title">Server-Side</text>
+    <text x="650" y="100" class="label">(Flask Server)</text>
+
+    <!-- Frontend Component -->
+    <rect x="50" y="180" width="200" height="140" class="box" style="fill: #e6f7ff; stroke: #1890ff;" />
+    <text x="150" y="240" class="title" style="fill: #1890ff;">React Frontend</text>
+    <text x="150" y="260" class="label">Image Upload &amp;</text>
+    <text x="150" y="275" class="label">Result Display</text>
+
+    <!-- Backend Component -->
+    <rect x="550" y="180" width="200" height="140" class="box" style="fill: #fffbe6; stroke: #faad14;" />
+    <text x="650" y="240" class="title" style="fill: #faad14;">Flask API</text>
+    <text x="650" y="260" class="label">/predict endpoint</text>
+
+    <!-- Model Components -->
+    <g>
+        <rect x="320" y="120" width="160" height="60" class="box" style="fill: #f6ffed; stroke: #52c41a;" />
+        <text x="400" y="155" class="title" style="fill: #52c41a;">Preprocessing</text>
+    </g>
+    <g>
+        <rect x="320" y="220" width="160" height="60" class="box" style="fill: #f6ffed; stroke: #52c41a;" />
+        <text x="400" y="255" class="title" style="fill: #52c41a;">Xception Model</text>
+    </g>
+    <g>
+        <rect x="320" y="320" width="160" height="60" class="box" style="fill: #f6ffed; stroke: #52c41a;" />
+        <text x="400" y="355" class="title" style="fill: #52c41a;">Grad-CAM</text>
+    </g>
+
+    <!-- Arrows -->
+    <!-- User -> React -->
+    <path d="M 150 130 v 40" class="arrow-line" />
+    <text x="150" y="120" class="flow-label">Uploads MRI</text>
+
+    <!-- React -> Flask -->
+    <path d="M 255 250 h 290" class="arrow-line" />
+    <text x="400" y="240" class="flow-label">1. POST Request (Image)</text>
+
+    <!-- Flask -> Preprocessing -->
+    <path d="M 545 250 c -50 0, -50 -80, -85 -80 h -40" class="arrow-line" />
+    <text x="480" y="160" class="flow-label">2. Process</text>
+
+    <!-- Preprocessing -> Model -->
+    <path d="M 400 185 v 30" class="arrow-line" />
+    <text x="430" y="210" class="flow-label">3. Feed</text>
+
+    <!-- Model -> Grad-CAM -->
+    <path d="M 400 285 v 30" class="arrow-line" />
+    <text x="430" y="310" class="flow-label">4. Explain</text>
+
+    <!-- Grad-CAM -> Flask -->
+    <path d="M 485 350 h 60 c 40 0, 40 -90, 0 -90 h -5" class="arrow-line" />
+    <text x="510" y="300" class="flow-label">5. Return Result</text>
+
+    <!-- Flask -> React -->
+    <path d="M 545 280 h -290" class="arrow-line" />
+    <text x="400" y="295" class="flow-label">6. JSON Response (Prediction + Heatmap)</text>
+
+</svg>
