@@ -1,50 +1,9 @@
-import { Layers, TrendingUp, ExternalLink, CheckCircle } from 'lucide-react'
+import { ExternalLink, Github, Database } from 'lucide-react'
 
 const ModelPage = () => {
-  const architecture = [
-    {
-      layer: 'Input Layer',
-      details: '224×224×3 RGB MRI Image',
-      neurons: '150,528',
-    },
-    {
-      layer: 'Conv Block 1-2',
-      details: '64 filters, 3×3, ReLU + MaxPool',
-      neurons: '~1.8M',
-    },
-    {
-      layer: 'Conv Block 3-4',
-      details: '256-512 filters, 3×3, ReLU',
-      neurons: '~7.1M',
-    },
-    {
-      layer: 'Conv Block 5',
-      details: '512 filters, Grad-CAM target',
-      neurons: '~7.6M',
-    },
-    {
-      layer: 'Dense Layers',
-      details: 'FC-4096 → FC-4096 → Dropout',
-      neurons: '~33.6M',
-    },
-    {
-      layer: 'Output Layer',
-      details: 'Softmax, 4 classes',
-      neurons: '4',
-    },
-  ]
-
   const keySpecs = [
-
     { label: 'Model Architecture', value: 'Xception Transfer Learning' },
     { label: 'Training Dataset', value: '7,023 MRI Scans' },
-  ]
-
-  const performance = [
-    { class: 'Glioma', accuracy: 97.2, precision: 96.8, recall: 97.6, f1: 97.2 },
-    { class: 'Meningioma', accuracy: 96.1, precision: 95.4, recall: 96.8, f1: 96.1 },
-    { class: 'Pituitary', accuracy: 98.3, precision: 98.1, recall: 98.5, f1: 98.3 },
-    { class: 'No Tumor', accuracy: 94.2, precision: 93.7, recall: 94.8, f1: 94.2 },
   ]
 
   return (
@@ -61,18 +20,38 @@ const ModelPage = () => {
         </div>
 
         {/* Two-Column Layout */}
-        <div className="grid lg:grid-cols-[40%_60%] gap-8 lg:gap-10">
+        <div className="grid lg:grid-cols-[45%_55%] gap-8 lg:gap-10">
           
-          {/* LEFT COLUMN */}
+          {/* LEFT COLUMN - Project Links */}
           <div className="space-y-6">
             
-            {/* Google Colab Access Card */}
+            {/* GitHub Repository */}
             <div className="medical-card p-6">
               <h3 className="text-xl font-semibold text-slate-200 mb-2">
-                Access Model Training
+                GitHub Repository
               </h3>
               <p className="text-sm text-slate-400 mb-5 leading-relaxed">
-                View complete training notebook and implementation details
+                View source code, documentation, and project details
+              </p>
+              <a
+                href="https://github.com/girijeshhs/ANN-BRAINTUMORPROJ"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 w-full bg-gradient-to-r from-[#24292e] to-[#1a1e22] hover:from-[#2f363d] hover:to-[#24292e] text-white font-medium py-3.5 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg border border-slate-700/30"
+              >
+                <Github className="w-5 h-5" />
+                <span className="text-[15px]">View on GitHub</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
+
+            {/* Google Colab Notebook */}
+            <div className="medical-card p-6">
+              <h3 className="text-xl font-semibold text-slate-200 mb-2">
+                Google Colab Notebook
+              </h3>
+              <p className="text-sm text-slate-400 mb-5 leading-relaxed">
+                Access complete training notebook and implementation details
               </p>
               <a
                 href="https://colab.research.google.com/drive/1gV5ulswcm5aEEOC5j5tA890DHuIbVjVZ?usp=sharing"
@@ -88,30 +67,24 @@ const ModelPage = () => {
               </a>
             </div>
 
-            {/* Why Xception Section */}
+            {/* Dataset Link */}
             <div className="medical-card p-6">
-              <h3 className="text-xl font-semibold text-slate-200 mb-4">
-                Why Xception Neural Network?
+              <h3 className="text-xl font-semibold text-slate-200 mb-2">
+                Training Dataset
               </h3>
-              <div className="space-y-4 text-[15px] text-slate-300 leading-relaxed">
-                <p>
-                  Xception was selected for its exceptional performance in medical imaging classification through transfer learning. 
-                  Pre-trained on ImageNet's 1.4 million images, the model brings advanced depthwise separable convolution capabilities that 
-                  provide better parameter efficiency and superior feature extraction while maintaining high accuracy on our specialized brain tumor dataset.
-                </p>
-                <p>
-                  The architecture's depthwise separable convolutions create highly efficient feature representations ideal for 
-                  identifying subtle patterns in MRI scans. With 36 convolutional blocks, this deep structure enables the network to learn increasingly 
-                  abstract tumor characteristics—from basic edges and textures in early layers to complex pathological 
-                  features in deeper layers—all while using fewer parameters than traditional CNNs.
-                </p>
-                <p>
-                  Clinical validation requires explainability. Xception's modular architecture facilitates Grad-CAM 
-                  visualization through its activation layers, highlighting the exact regions influencing classification decisions. This transparency 
-                  allows radiologists to verify the model's reasoning, ensuring diagnoses align with established clinical 
-                  criteria and building trust in AI-assisted workflows.
-                </p>
-              </div>
+              <p className="text-sm text-slate-400 mb-5 leading-relaxed">
+                Access the brain tumor MRI dataset used for training
+              </p>
+              <a
+                href="https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 w-full bg-gradient-to-r from-[#20beff] to-[#1a9dd1] hover:from-[#3dc8ff] hover:to-[#20beff] text-white font-medium py-3.5 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+              >
+                <Database className="w-5 h-5" />
+                <span className="text-[15px]">View Dataset on Kaggle</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
             </div>
 
             {/* Key Specifications */}
@@ -131,94 +104,53 @@ const ModelPage = () => {
 
           </div>
 
-          {/* RIGHT COLUMN */}
-          <div className="space-y-8">
+          {/* RIGHT COLUMN - Why Xception */}
+          <div className="space-y-6">
             
-            {/* Architecture Table */}
+            {/* Why Xception Section */}
             <div className="medical-card p-7">
-              <h3 className="text-2xl font-semibold text-slate-100 mb-6 flex items-center gap-3">
-                <Layers className="w-6 h-6 text-[#6b9bd1]" />
-                Network Architecture
+              <h3 className="text-2xl font-semibold text-slate-100 mb-6">
+                Why Xception Neural Network?
               </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-slate-700/50">
-                      <th className="text-left pb-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                        Layer Type
-                      </th>
-                      <th className="text-left pb-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                        Configuration
-                      </th>
-                      <th className="text-right pb-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                        Parameters
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {architecture.map((layer, index) => (
-                      <tr 
-                        key={layer.layer}
-                        className={`border-b border-slate-800/30 hover:bg-slate-800/20 transition-colors ${
-                          index % 2 === 0 ? 'bg-slate-900/20' : ''
-                        }`}
-                      >
-                        <td className="py-4 font-medium text-slate-200 text-[15px]">
-                          {layer.layer}
-                        </td>
-                        <td className="py-4 text-slate-400 text-[14px]">
-                          {layer.details}
-                        </td>
-                        <td className="py-4 text-right font-mono text-[#6b9bd1] font-semibold text-[14px]">
-                          {layer.neurons}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Classification Performance */}
-            <div className="medical-card p-7">
-              <h3 className="text-2xl font-semibold text-slate-100 mb-6 flex items-center gap-3">
-                <TrendingUp className="w-6 h-6 text-[#6b9bd1]" />
-                Classification Performance
-              </h3>
-              <div className="grid md:grid-cols-2 gap-5">
-                {performance.map((perf) => (
-                  <div
-                    key={perf.class}
-                    className="bg-[#1a1d29] rounded-lg p-5 border border-slate-700/30"
-                  >
-                    <div className="flex items-center gap-2 mb-4">
-                      <CheckCircle className="w-4 h-4 text-[#6b9bd1]" />
-                      <h4 className="text-lg font-semibold text-slate-200">
-                        {perf.class}
-                      </h4>
-                    </div>
-                    <div className="space-y-3">
-                      {['accuracy', 'precision', 'recall', 'f1'].map((metric) => (
-                        <div key={metric}>
-                          <div className="flex justify-between text-xs mb-1.5">
-                            <span className="capitalize text-slate-400 font-medium">
-                              {metric === 'f1' ? 'F1-Score' : metric}
-                            </span>
-                            <span className="font-semibold text-slate-200 font-mono">
-                              {perf[metric]}%
-                            </span>
-                          </div>
-                          <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                            <div
-                              style={{ width: `${perf[metric]}%` }}
-                              className="bg-[#6b9bd1] h-1.5 rounded-full transition-all duration-500"
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+              <div className="space-y-5 text-[15px] text-slate-300 leading-relaxed">
+                <p>
+                  Xception was selected for its exceptional performance in medical imaging classification through transfer learning. 
+                  Pre-trained on ImageNet's 1.4 million images, the model brings advanced depthwise separable convolution capabilities that 
+                  provide better parameter efficiency and superior feature extraction while maintaining high accuracy on our specialized brain tumor dataset.
+                </p>
+                <p>
+                  The architecture's depthwise separable convolutions create highly efficient feature representations ideal for 
+                  identifying subtle patterns in MRI scans. With 36 convolutional blocks, this deep structure enables the network to learn increasingly 
+                  abstract tumor characteristics—from basic edges and textures in early layers to complex pathological 
+                  features in deeper layers—all while using fewer parameters than traditional CNNs.
+                </p>
+                <p>
+                  Clinical validation requires explainability. Xception's modular architecture facilitates Grad-CAM 
+                  visualization through its activation layers, highlighting the exact regions influencing classification decisions. This transparency 
+                  allows radiologists to verify the model's reasoning, ensuring diagnoses align with established clinical 
+                  criteria and building trust in AI-assisted workflows.
+                </p>
+                <div className="mt-6 pt-5 border-t border-slate-700/50">
+                  <h4 className="text-lg font-semibold text-slate-200 mb-3">Key Advantages</h4>
+                  <ul className="space-y-2 text-[14px]">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#6b9bd1] mt-1">•</span>
+                      <span><strong className="text-slate-200">Transfer Learning:</strong> Leverages ImageNet pre-training for superior feature extraction</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#6b9bd1] mt-1">•</span>
+                      <span><strong className="text-slate-200">Depthwise Separable Convolutions:</strong> Efficient parameter usage with high accuracy</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#6b9bd1] mt-1">•</span>
+                      <span><strong className="text-slate-200">Deep Architecture:</strong> 36 convolutional blocks for complex pattern recognition</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#6b9bd1] mt-1">•</span>
+                      <span><strong className="text-slate-200">Grad-CAM Integration:</strong> Provides explainable AI for clinical validation</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
 
