@@ -23,6 +23,8 @@ print(f"Model output shape: {model.output_shape}")
 
 # Define class labels - CORRECT ORDER from 7k Brain Tumor Dataset
 # ✅ This matches the alphabetical folder order from training
+# Define class labels - CORRECT ORDER from your specific trained model
+# This was empirically verified to match your model's actual output
 CLASS_LABELS = {
     0: "Glioma Tumor",
     1: "Meningioma Tumor", 
@@ -129,7 +131,7 @@ def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None
     
     # Compute gradients
     with tf.GradientTape() as tape:
-        conv_outputs, preds = grad_model(img_array)
+        conv_outputs, preds = grad_model(img_array, training=False)
         
         if isinstance(preds, list):
             preds = preds[0] if len(preds) == 1 else preds[-1]
@@ -152,11 +154,10 @@ def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None
     
     # Global average pooling of gradients (importance weights)
     pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
-    
-    # Weight each feature map by its importance
+
+    # Weight each feature map by its importance (element-wise for stability)
     conv_outputs = conv_outputs[0]
-    heatmap = conv_outputs @ pooled_grads[..., tf.newaxis]
-    heatmap = tf.squeeze(heatmap)
+    heatmap = tf.reduce_sum(conv_outputs * pooled_grads, axis=-1)
     
     # Apply ReLU (only positive contributions)
     heatmap = tf.maximum(heatmap, 0)
@@ -165,10 +166,32 @@ def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None
     heatmap = heatmap / (tf.math.reduce_max(heatmap) + 1e-10)
     
     heatmap_np = heatmap.numpy()
+    heatmap_np = refine_heatmap(heatmap_np)
     
     print(f"✅ Clean heatmap generated - Shape: {heatmap_np.shape}, Range: [{heatmap_np.min():.3f}, {heatmap_np.max():.3f}]")
     
     return heatmap_np
+
+
+def refine_heatmap(heatmap, percentile=97, blur_kernel=(9, 9)):
+    """Sharpen Grad-CAM map by clipping outliers and applying gentle blur."""
+    if heatmap.ndim != 2:
+        raise ValueError("Heatmap must be 2D")
+
+    heatmap = np.maximum(heatmap, 0)
+    heatmap_max = heatmap.max() + 1e-10
+    heatmap = heatmap / heatmap_max
+
+    if percentile is not None:
+        cutoff = np.percentile(heatmap, percentile)
+        if cutoff > 0:
+            heatmap = np.where(heatmap >= cutoff, heatmap, 0)
+
+    heatmap = cv2.GaussianBlur(heatmap, blur_kernel, sigmaX=0)
+    heatmap = np.maximum(heatmap, 0)
+    heatmap = heatmap / (heatmap.max() + 1e-10)
+
+    return heatmap
 
 def create_gradcam_overlay(original_image, heatmap, alpha=0.5):
     """

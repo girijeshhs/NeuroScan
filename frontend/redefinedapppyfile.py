@@ -24,20 +24,48 @@ def preprocess_image(image, target_size=(299, 299)):
     return xception_preprocess(img_array)
 
 def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
-    last_conv_layer = model.get_layer(last_conv_layer_name)
-    grad_model = keras.models.Model(inputs=model.input, outputs=[last_conv_layer.output, model.output])
+    # Build a model that maps the input image to the activations of the last conv layer
+    # and the final predictions. This avoids re-loading weights for every request.
+    target_layer = model.get_layer(last_conv_layer_name)
+    grad_model = keras.models.Model(inputs=model.input, outputs=[target_layer.output, model.output])
+
     with tf.GradientTape() as tape:
         conv_outputs, preds = grad_model(img_array)
-        if pred_index is None: pred_index = tf.argmax(preds[0])
-        class_channel = preds[:, int(pred_index.numpy() if hasattr(pred_index, 'numpy') else pred_index)]
+        if pred_index is None:
+            pred_index = tf.argmax(preds[0])
+        pred_index = tf.cast(pred_index, tf.int32)
+        class_channel = preds[:, pred_index]
+
+    # Compute the gradient of the predicted class score with respect to the feature maps
     grads = tape.gradient(class_channel, conv_outputs)
-    pooled_grads = tf.reduce_mean(grads, axis=(0,1,2))
-    heatmap = tf.squeeze(conv_outputs[0] @ pooled_grads[..., tf.newaxis])
-    heatmap = tf.maximum(heatmap, 0) / (tf.math.reduce_max(heatmap)+1e-10)
+    pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
+
+    conv_outputs = conv_outputs[0]
+    # Weight each channel in the feature map by its corresponding importance
+    weighted_features = conv_outputs * pooled_grads
+    heatmap = tf.reduce_sum(weighted_features, axis=-1)
+
+    # Normalize the heatmap and clamp negatives to zero for better visualization
+    heatmap = tf.maximum(heatmap, 0)
+    max_val = tf.reduce_max(heatmap) + 1e-10
+    heatmap /= max_val
     return heatmap.numpy()
 
+def refine_heatmap(heatmap, percentile=85, blur_kernel=11):
+    # Suppress low-importance regions to keep the focus on critical activations
+    threshold = np.percentile(heatmap, percentile)
+    refined = np.where(heatmap < threshold, 0, heatmap)
+    refined = refined.astype(np.float32)
+    if blur_kernel % 2 == 0:
+        blur_kernel += 1  # Kernel size must be odd for GaussianBlur
+    refined = cv2.GaussianBlur(refined, (blur_kernel, blur_kernel), 0)
+    peak = refined.max() + 1e-10
+    refined /= peak
+    return refined
+
 def create_gradcam_overlay(original_image, heatmap, alpha=0.5):
-    heatmap = cv2.resize(np.clip(heatmap,0,1),(original_image.width,original_image.height))
+    heatmap = refine_heatmap(np.clip(heatmap, 0, 1))
+    heatmap = cv2.resize(heatmap, (original_image.width, original_image.height))
     heatmap_colored = cv2.applyColorMap(np.uint8(255*heatmap), cv2.COLORMAP_JET)
     img_array = np.array(original_image)
     if len(img_array.shape)==2: img_array = cv2.cvtColor(img_array, cv2.COLOR_GRAY2RGB)
@@ -46,9 +74,11 @@ def create_gradcam_overlay(original_image, heatmap, alpha=0.5):
     return cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB)
 
 def get_last_conv_layer_name(model):
-    layer_name = "block14_sepconv2_act"
-    try: model.get_layer(layer_name); return layer_name
-    except: return next((layer.name for layer in model.layers if isinstance(layer, (keras.layers.SeparableConv2D, keras.layers.Conv2D))), None)
+    # Prefer the deepest convolutional layer to capture the richest spatial features
+    for layer in reversed(model.layers):
+        if isinstance(layer, (keras.layers.SeparableConv2D, keras.layers.Conv2D)):
+            return layer.name
+    return None
 
 def image_to_base64(img_array):
     buf = BytesIO(); Image.fromarray(img_array.astype('uint8')).save(buf, format="PNG")
