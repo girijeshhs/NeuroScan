@@ -129,13 +129,21 @@ Grad-CAM calculates the importance of each neuron in the final convolutional lay
 **Qualitative Results:**
 *   **Grad-CAM Validation:** The generated heatmaps were qualitatively assessed and found to consistently localize the correct pathological regions in tumorous scans. For "No Tumor" cases, the heatmaps were diffuse and unfocused, which is the expected and correct behavior. This confirms that the model is learning clinically relevant features rather than relying on spurious artifacts.
 
-**Comparison with Existing Work:**
+**Comparison of Obtained Results with Existing Works**
 
-| System | Method | Accuracy | Interpretability |
+Our system represents a significant advancement over previous methodologies by integrating state-of-the-art accuracy with essential interpretability, delivered in a practical, full-stack application.
+
+| System / Author | Methodology | Reported Accuracy | Key Differentiator / Limitation |
 | :--- | :--- | :--- | :--- |
-| Traditional (Zacharaki et al.) | SVM + Manual Features | ~85-90% | Low (Features are hand-picked) |
-| Basic CNNs | Standard CNN | ~90-94% | No (Black Box) |
-| **Our System** | **Xception + Grad-CAM** | **>95%** | **High (Visual Heatmaps)** |
+| **Traditional (Zacharaki et al.)** | Classical ML (SVM) + Manual Feature Engineering | ~85-90% | **Limitation:** Labor-intensive, subjective feature selection, and struggles to generalize. Performance is capped by the quality of hand-crafted features. |
+| **Early Deep Learning (Basic CNNs)** | Custom CNNs trained from scratch | ~90-94% | **Limitation:** A "black box" approach. Provides a prediction with no explanation, limiting clinical trust and utility. Often requires very large datasets. |
+| **Our System** | **Xception CNN + Transfer Learning + Grad-CAM** | **>95%** | **Advantage:** Achieves superior accuracy while providing **full interpretability** through Grad-CAM heatmaps. The full-stack implementation makes it a complete, usable tool, not just a research model. |
+
+**Why Our System is Better:**
+
+*   **Superior Accuracy:** By using a powerful, pre-trained Xception model, we surpass the accuracy of both traditional methods and more basic CNN architectures.
+*   **Trust and Transparency:** Unlike "black box" models, we provide visual proof for every prediction. This is the single most important factor for clinical adoption, as it allows experts to validate *why* a decision was made.
+*   **End-to-End Solution:** We deliver more than just a model; we provide a fully functional web application, demonstrating a clear path from research to practical, real-world application.
 
 Our system's primary advantage lies not just in its high accuracy but in its tight integration of an explainability mechanism within a practical, user-friendly application, making it a superior decision-support tool.
 
