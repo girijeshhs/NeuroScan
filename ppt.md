@@ -81,11 +81,15 @@ This architecture ensures a clean separation of concerns, allowing the user inte
 Our model's predictions and explanations are grounded in key mathematical concepts.
 
 **1. Softmax Activation (For Classification)**
-The final layer of our network uses the Softmax function to convert the model's raw output scores (logits) into a probability distribution across the 4 classes. The probability of class *j* is given by:
-$$ P(y=j | \mathbf{x}) = \frac{e^{z_j}}{\sum_{k=1}^{K} e^{z_k}} $$
-Where:
-- $z_j$ is the output logit for class *j*.
-- *K* is the total number of classes (4 in our case).
+The final layer of our network uses the Softmax function to convert the model's raw output scores (logits) into a probability distribution across the 4 classes.
+
+*Equation:*
+```latex
+P(y=j | \mathbf{x}) = \frac{e^{z_j}}{\sum_{k=1}^{K} e^{z_k}}
+```
+*Where:*
+- `z_j` is the output logit for class *j*.
+- `K` is the total number of classes (4 in our case).
 
 **2. Depthwise Separable Convolution (Core of Xception)**
 This operation is more efficient than standard convolution. It works in two steps:
@@ -94,10 +98,18 @@ This operation is more efficient than standard convolution. It works in two step
 
 **3. Grad-CAM (For Explainability)**
 Grad-CAM calculates the importance of each neuron in the final convolutional layer for a specific prediction.
-*   First, we compute the weights ($\alpha_k^c$) for each feature map *k* for a class *c*, by global average pooling the gradients of the class score with respect to the feature map activations ($A^k$):
-    $$ \alpha_k^c = \frac{1}{Z} \sum_i \sum_j \frac{\partial y^c}{\partial A_{ij}^k} $$
+*   First, we compute the weights for each feature map *k* for a class *c*, by global average pooling the gradients of the class score with respect to the feature map activations:
+
+*Equation for weights:*
+```latex
+\alpha_k^c = \frac{1}{Z} \sum_i \sum_j \frac{\partial y^c}{\partial A_{ij}^k}
+```
 *   The heatmap is then a weighted combination of the feature maps, passed through a ReLU function to keep only the positive contributions:
-    $$ L_{Grad-CAM}^c = \text{ReLU}\left(\sum_k \alpha_k^c A^k\right) $$
+
+*Equation for heatmap:*
+```latex
+L_{Grad-CAM}^c = \text{ReLU}\left(\sum_k \alpha_k^c A^k\right)
+```
 
 ---
 
