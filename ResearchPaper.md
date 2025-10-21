@@ -110,11 +110,11 @@ The model was trained on publicly available brain tumor MRI scan datasets from K
 
 | Class | Training Images | Validation Images | Test Images | Total |
 |-------|----------------|-------------------|-------------|-------|
-| Glioma | ~1,321 | ~300 | ~300 | ~1,921 |
-| Meningioma | ~1,339 | ~306 | ~306 | ~1,951 |
-| No Tumor | ~1,595 | ~405 | ~405 | ~2,405 |
-| Pituitary | ~1,457 | ~300 | ~300 | ~2,057 |
-| **Total** | **~5,712** | **~1,311** | **~1,311** | **~8,334** |
+| Glioma | ~1,321 | ~0 | ~300 | ~1,621 |
+| Meningioma | ~1,339 | ~0 | ~306 | ~1,645 |
+| No Tumor | ~1,595 | ~0 | ~405 | ~2,000 |
+| Pituitary | ~1,457 | ~0 | ~300 | ~1,757 |
+| **Total** | **~5,712** | **~0** | **~1,311** | **~7,023** |
 
 *Table 2: Distribution of MRI images across four tumor classes in training, validation, and test sets.*
 
